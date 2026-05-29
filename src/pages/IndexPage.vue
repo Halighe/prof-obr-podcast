@@ -40,12 +40,16 @@
               <div class="space-content">
                 <!-- Картинка слева -->
                 <div class="space-image">
-                  <q-img
-                    src="~assets/Frame 2131330347.svg"
-                    class="space-img"
-                    fit="contain"
-                    :no-native-menu="true"
-                  />
+                  <picture>
+                    <source media="(max-width: 480px)" srcset="~assets/Frame2131330347.svg" />
+                    <source media="(max-width: 768px)" srcset="~assets/mobile-image.svg" />
+                    <source media="(min-width: 769px)" srcset="~assets/Frame2131330347.svg" />
+                    <img
+                      src="~assets/Frame2131330347.svg"
+                      class="space-img"
+                      alt="Пространство для детей, родителей и педагогов"
+                    />
+                  </picture>
                 </div>
 
                 <!-- Текст по левому краю -->
@@ -183,7 +187,7 @@
         <div v-if="activeActivity === 'study'" class="activity-content">
           <div class="cards-grid">
             <!-- Карточка 1 -->
-            <div class="activity-card">
+            <div class="activity-card card-1">
               <div class="card-header">
                 <q-img src="~assets/icon.svg" class="card-icon" fit="contain" />
                 <div class="card-title">Инженерные классы</div>
@@ -199,27 +203,35 @@
                     <q-img src="~assets/SVG.svg" class="docs-icon" fit="contain" />
                     <span>Документы</span>
                   </div>
-                  <span class="files-count">3 файла</span>
+                  <span class="files-count">2 файла</span>
                 </div>
                 <div class="files-list">
                   <div class="file-item">
-                    <q-img src="~assets/icon-pdf.svg" class="file-icon" fit="contain" />
-                    <span class="file-name">Название документа 1.pdf</span>
+                    <div class="file-info">
+                      <q-img src="~assets/icon-pdf.svg" class="file-icon" fit="contain" />
+                      <div class="file-details">
+                        <span class="file-name">Презентация «Инженерная вертикаль»</span>
+                        <span class="file-size">PDF • 2.4 MB</span>
+                      </div>
+                    </div>
+                    <q-img src="~assets/icon_download.svg" class="download-icon" fit="contain" />
                   </div>
                   <div class="file-item">
-                    <q-img src="~assets/icon-docx.svg" class="file-icon" fit="contain" />
-                    <span class="file-name">Название документа 2.docx</span>
-                  </div>
-                  <div class="file-item">
-                    <q-img src="~assets/icon-docx.svg" class="file-icon" fit="contain" />
-                    <span class="file-name">Название документа 3.pdf</span>
+                    <div class="file-info">
+                      <q-img src="~assets/icon-docx.svg" class="file-icon" fit="contain" />
+                      <div class="file-details">
+                        <span class="file-name">Информация о приеме в 7 класс</span>
+                        <span class="file-size">DOCX • 2.4 MB</span>
+                      </div>
+                    </div>
+                    <q-img src="~assets/icon_download.svg" class="download-icon" fit="contain" />
                   </div>
                 </div>
               </div>
             </div>
 
             <!-- Карточка 2 -->
-            <div class="activity-card">
+            <div class="activity-card card-2">
               <div class="card-header">
                 <q-img src="~assets/icon (1).svg" class="card-icon" fit="contain" />
                 <div class="card-title">Строительные классы</div>
@@ -239,19 +251,31 @@
                 </div>
                 <div class="files-list">
                   <div class="file-item">
-                    <q-img src="~assets/icon-pdf.svg" class="file-icon" fit="contain" />
-                    <span class="file-name">Название документа 1.pdf</span>
+                    <div class="file-info">
+                      <q-img src="~assets/icon-pdf.svg" class="file-icon" fit="contain" />
+                      <div class="file-details">
+                        <span class="file-name">Презентация «Инженерная вертикаль»</span>
+                        <span class="file-size">PDF • 2.4 MB</span>
+                      </div>
+                    </div>
+                    <q-img src="~assets/icon_download.svg" class="download-icon" fit="contain" />
                   </div>
                   <div class="file-item">
-                    <q-img src="~assets/icon-docx.svg" class="file-icon" fit="contain" />
-                    <span class="file-name">Название документа 2.docx</span>
+                    <div class="file-info">
+                      <q-img src="~assets/icon-docx.svg" class="file-icon" fit="contain" />
+                      <div class="file-details">
+                        <span class="file-name">Информация о приеме в 7 класс</span>
+                        <span class="file-size">DOCX • 2.4 MB</span>
+                      </div>
+                    </div>
+                    <q-img src="~assets/icon_download.svg" class="download-icon" fit="contain" />
                   </div>
                 </div>
               </div>
             </div>
 
             <!-- Карточка 3 -->
-            <div class="activity-card">
+            <div class="activity-card card-3">
               <div class="card-header">
                 <q-img src="~assets/icon (2).svg" class="card-icon" fit="contain" />
                 <div class="card-title">Профильные классы</div>
@@ -271,20 +295,44 @@
                 </div>
                 <div class="files-list">
                   <div class="file-item">
-                    <q-img src="~assets/icon-pdf.svg" class="file-icon" fit="contain" />
-                    <span class="file-name">Название документа 1.pdf</span>
+                    <div class="file-info">
+                      <q-img src="~assets/icon-pdf.svg" class="file-icon" fit="contain" />
+                      <div class="file-details">
+                        <span class="file-name">Презентация «Инженерная вертикаль»</span>
+                        <span class="file-size">PDF • 2.4 MB</span>
+                      </div>
+                    </div>
+                    <q-img src="~assets/icon_download.svg" class="download-icon" fit="contain" />
                   </div>
                   <div class="file-item">
-                    <q-img src="~assets/icon-docx.svg" class="file-icon" fit="contain" />
-                    <span class="file-name">Название документа 2.docx</span>
+                    <div class="file-info">
+                      <q-img src="~assets/icon-docx.svg" class="file-icon" fit="contain" />
+                      <div class="file-details">
+                        <span class="file-name">Информация о приеме в 7 класс</span>
+                        <span class="file-size">DOCX • 2.4 MB</span>
+                      </div>
+                    </div>
+                    <q-img src="~assets/icon_download.svg" class="download-icon" fit="contain" />
                   </div>
                   <div class="file-item">
-                    <q-img src="~assets/icon-pdf.svg" class="file-icon" fit="contain" />
-                    <span class="file-name">Название документа 3.pdf</span>
+                    <div class="file-info">
+                      <q-img src="~assets/icon-pdf.svg" class="file-icon" fit="contain" />
+                      <div class="file-details">
+                        <span class="file-name">Презентация «Инженерная вертикаль»</span>
+                        <span class="file-size">PDF • 2.4 MB</span>
+                      </div>
+                    </div>
+                    <q-img src="~assets/icon_download.svg" class="download-icon" fit="contain" />
                   </div>
                   <div class="file-item">
-                    <q-img src="~assets/icon-docx.svg" class="file-icon" fit="contain" />
-                    <span class="file-name">Название документа 4.docx</span>
+                    <div class="file-info">
+                      <q-img src="~assets/icon-docx.svg" class="file-icon" fit="contain" />
+                      <div class="file-details">
+                        <span class="file-name">Информация о приеме в 7 класс</span>
+                        <span class="file-size">DOCX • 2.4 MB</span>
+                      </div>
+                    </div>
+                    <q-img src="~assets/icon_download.svg" class="download-icon" fit="contain" />
                   </div>
                 </div>
               </div>
@@ -302,19 +350,149 @@
     </div>
 
     <!-- Секция "Подкасты" -->
-    <div id="podcasts" class="section-padding">
-      <!-- ваш контент про подкасты -->
+    <div id="podcasts" class="podcasts-section">
+      <div class="podcasts-container">
+        <div class="podcasts-title">Подкасты</div>
+        <div class="podcasts-description">
+          Разнообразные образовательные программы для всестороннего развития каждого ученика
+        </div>
+
+        <!-- Сетка карточек подкастов -->
+        <div class="podcasts-grid">
+          <div v-for="(podcast, index) in visiblePodcasts" :key="index" class="podcast-card">
+            <div class="podcast-image">
+              <q-img
+                src="~assets/video.svg"
+                class="podcast-img"
+                fit="cover"
+                :no-native-menu="true"
+              />
+              <div class="play-button" @click="playPodcast(podcast)">
+                <q-img src="~assets/play-icon.svg" class="play-icon" fit="contain" />
+              </div>
+            </div>
+            <div class="podcast-title">{{ podcast.title }}</div>
+            <!-- <div class="podcast-author">{{ podcast.author }}</div> -->
+          </div>
+        </div>
+
+        <!-- Кнопка "Показать больше" -->
+        <div v-if="hasMorePodcasts" class="show-more-wrapper">
+          <q-btn
+            unelevated
+            class="show-more-btn"
+            no-caps
+            :loading="loadingMore"
+            @click="loadMorePodcasts"
+          >
+            <span class="btn-content">
+              Показать больше
+              <q-img src="~assets/arrow-right.svg" class="btn-icon" fit="contain" />
+            </span>
+          </q-btn>
+        </div>
+      </div>
     </div>
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useQuasar } from 'quasar';
 
 const $q = useQuasar();
 
 const activeActivity = ref('study');
+const loadingMore = ref(false);
+
+// Данные подкастов
+const allPodcasts = ref([
+  {
+    title: 'Как выбрать профессию?',
+    author: 'Елена Смирнова',
+    duration: '24 мин',
+    image: '~assets/podcast-1.jpg',
+  },
+  {
+    title: 'IT-сфера: мифы и реальность',
+    author: 'Алексей Иванов',
+    duration: '32 мин',
+    image: '~assets/podcast-2.jpg',
+  },
+  {
+    title: 'Профессия будущего',
+    author: 'Мария Петрова',
+    duration: '28 мин',
+    image: '~assets/podcast-3.jpg',
+  },
+  {
+    title: 'Как стать инженером?',
+    author: 'Дмитрий Сидоров',
+    duration: '35 мин',
+    image: '~assets/podcast-4.jpg',
+  },
+  {
+    title: 'Творческие профессии',
+    author: 'Анна Козлова',
+    duration: '22 мин',
+    image: '~assets/podcast-5.jpg',
+  },
+  {
+    title: 'Медицина сегодня',
+    author: 'Татьяна Морозова',
+    duration: '30 мин',
+    image: '~assets/podcast-6.jpg',
+  },
+  {
+    title: 'Бизнес и стартапы',
+    author: 'Павел Новиков',
+    duration: '40 мин',
+    image: '~assets/podcast-7.jpg',
+  },
+  {
+    title: 'Педагогика нового времени',
+    author: 'Ольга Соколова',
+    duration: '26 мин',
+    image: '~assets/podcast-8.jpg',
+  },
+  {
+    title: 'Экология и устойчивое развитие',
+    author: 'Игорь Васильев',
+    duration: '33 мин',
+    image: '~assets/podcast-9.jpg',
+  },
+]);
+
+// Количество подкастов для отображения (начальные 6 = 2 ряда по 3)
+const visibleCount = ref(6);
+
+// Видимые подкасты
+const visiblePodcasts = computed(() => {
+  return allPodcasts.value.slice(0, visibleCount.value);
+});
+
+// Есть ли ещё подкасты для показа
+const hasMorePodcasts = computed(() => {
+  return visibleCount.value < allPodcasts.value.length;
+});
+
+// Загрузка дополнительных подкастов
+const loadMorePodcasts = () => {
+  loadingMore.value = true;
+
+  // Имитация загрузки (можно убрать или оставить для эффекта)
+  setTimeout(() => {
+    visibleCount.value = allPodcasts.value.length;
+    loadingMore.value = false;
+
+    $q.notify({
+      message: 'Все подкасты загружены',
+      color: 'positive',
+      position: 'bottom',
+      timeout: 2000,
+    });
+  }, 500);
+};
 
 const onLearnMore = () => {
   $q.notify({
@@ -322,6 +500,25 @@ const onLearnMore = () => {
     color: 'primary',
     position: 'top',
     icon: 'info',
+  });
+};
+// Функция для воспроизведения подкаста
+const playPodcast = (podcast: any) => {
+  // Здесь можно открыть модальное окно с видео или перейти на страницу подкаста
+  $q.notify({
+    message: `Воспроизведение: ${podcast.title}`,
+    color: 'info',
+    position: 'top',
+    icon: 'play_circle',
+    timeout: 2000,
+  });
+
+  // Пример открытия модального окна с видео:
+  $q.dialog({
+    title: podcast.title,
+    message: 'Здесь будет видео плеер',
+    persistent: true,
+    ok: 'Закрыть',
   });
 };
 </script>
@@ -501,6 +698,7 @@ const onLearnMore = () => {
 
 .advantage-card {
   text-align: left;
+  width: 100%;
 }
 
 .advantage-image {
@@ -528,14 +726,6 @@ const onLearnMore = () => {
     width: 100%;
     height: auto;
   }
-}
-// Блок с преимуществами
-.advantages-section {
-  padding: 60px 0 40px;
-}
-
-.advantage-card {
-  width: 100%;
 }
 
 .advantage-row {
@@ -648,16 +838,31 @@ const onLearnMore = () => {
   background: #ffffff;
   border-radius: 40px;
   padding: 24px;
-  box-shadow:
-    0px -20px 0px 0px #ddbbfb,
-    0px 0px 14px 0px #5054681f;
-
   transition: transform 0.3s ease;
 
   &:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 28px rgba(0, 0, 0, 0.1);
   }
+}
+.card-1 {
+  box-shadow:
+    0px -20px 0px 0px #ddbbfb,
+    0px 0px 14px 0px rgba(80, 84, 104, 0.12);
+}
+
+// Голубая тень
+.card-2 {
+  box-shadow:
+    0px -20px 0px 0px #dce0f4,
+    0px 0px 14px 0px rgba(80, 84, 104, 0.12);
+}
+
+// Зелёная тень
+.card-3 {
+  box-shadow:
+    0px -20px 0px 0px #fbc6ba,
+    0px 0px 14px 0px rgba(80, 84, 104, 0.12);
 }
 
 .card-header {
@@ -737,27 +942,252 @@ const onLearnMore = () => {
 .file-item {
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: space-between;
   cursor: pointer;
+  border-radius: 16px;
+  background-color: #f9fafb;
+  padding: 12px;
+  gap: 12px;
 
   &:hover span {
     color: #f5a623;
   }
 }
 
+.file-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.file-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
 .file-icon {
-  width: 20px;
-  height: 20px;
+  width: 40px;
+  height: 40px;
   flex-shrink: 0;
+  padding: 12px;
 }
 
 .file-name {
   font-family: 'Mulish', sans-serif;
-  font-size: 13px;
-  font-weight: 400;
-  color: #6f6f7a;
+  font-size: 14px;
+  font-weight: 500;
+  color: #131314;
   text-decoration: none;
   transition: color 0.2s ease;
+}
+
+.file-size {
+  font-family: 'Mulish', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: #505468;
+}
+
+.download-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+// Секция "Подкасты"
+.podcasts-section {
+  padding: 80px 24px 100px;
+  margin: 0 auto;
+  border-radius: 100px;
+  background-color: #eef2fd;
+}
+
+.podcasts-container {
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.podcasts-title {
+  font-family: 'Mulish', sans-serif;
+  font-size: 80px;
+  font-weight: 700;
+  color: #505468;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.podcasts-description {
+  font-family: 'Mulish', sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  color: #4b5563;
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 60px;
+  line-height: 1.5;
+}
+
+.podcasts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+.podcast-card {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translateY(-8px);
+  }
+}
+
+.podcast-image {
+  position: relative;
+  border-radius: 24px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  aspect-ratio: 16 / 9;
+  cursor: pointer;
+
+  &:hover .play-button {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+
+.podcast-img {
+  width: 100%;
+  height: 100%;
+  transition: transform 0.3s ease;
+
+  :deep(.q-img__image) {
+    object-fit: cover;
+  }
+}
+
+.podcast-image:hover .podcast-img {
+  transform: scale(1.05);
+}
+
+.play-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60px;
+  height: 60px;
+  backdrop-filter: blur(4px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  opacity: 0.9;
+
+  &:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+
+.play-icon {
+  width: 60px;
+  height: 60px;
+}
+
+.podcast-title {
+  font-family: 'Mulish', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: #4b5563;
+}
+
+.show-more-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 64px;
+}
+
+.show-more-btn {
+  background: #fbe1ba;
+  color: #6f552e;
+  font-family: 'Mulish', sans-serif;
+  font-size: 24px;
+  font-weight: 400;
+  padding: 12px 40px;
+  border-radius: 40px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: #e8e8e8;
+    transform: translateY(-2px);
+  }
+}
+
+.btn-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-icon {
+  width: 24px;
+  height: 24px;
+
+  transition: transform 0.3s ease;
+}
+
+.show-more-btn:hover .btn-icon {
+  transform: translateX(4px);
+}
+
+// Адаптив для планшетов
+@media (max-width: 1024px) {
+  .podcasts-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  .podcasts-title {
+    font-size: 60px;
+  }
+}
+
+// Адаптив для мобильных
+@media (max-width: 768px) {
+  .podcasts-section {
+    padding: 60px 20px 80px;
+  }
+
+  .podcasts-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .podcasts-title {
+    font-size: 48px;
+  }
+
+  .podcasts-description {
+    font-size: 16px;
+    margin-bottom: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .podcasts-title {
+    font-size: 36px;
+  }
+
+  .show-more-btn {
+    padding: 10px 30px;
+    font-size: 14px;
+  }
 }
 
 // Адаптив для планшетов
@@ -790,7 +1220,7 @@ const onLearnMore = () => {
   }
 
   .activities-title {
-    font-size: 48px;
+    font-size: 40px;
     margin-bottom: 40px;
   }
 
@@ -833,8 +1263,42 @@ const onLearnMore = () => {
     padding: 40px 0;
   }
 
+  // Перестраиваем строку преимуществ
+  .row.q-col-gutter-lg {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  // Первая колонка (с текстом и иконками)
+  .col-12.col-md-6:first-child {
+    order: 1; // Первая колонка сверху
+  }
+
+  // Вторая колонка (с двумя картинками)
+  .col-12.col-md-6:last-child {
+    order: 2; // Вторая колонка снизу
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+
+    .row.q-col-gutter-md {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      gap: 20px;
+
+      .col-6 {
+        flex: 1;
+        width: 50%;
+      }
+    }
+  }
+
   .advantage-row {
-    gap: 16px;
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
   }
 
   .advantage-icon {
@@ -842,8 +1306,12 @@ const onLearnMore = () => {
   }
 
   .advantage-description {
-    font-size: 18px;
+    font-size: 22px;
     line-height: 28px;
+  }
+
+  .advantage-row {
+    gap: 16px;
   }
 }
 
@@ -859,26 +1327,12 @@ const onLearnMore = () => {
   .advantage-icon-right {
     width: 50px;
   }
-
-  .advantage-description {
-    font-size: 16px;
-    line-height: 24px;
-  }
 }
 // Адаптив для планшетов
 @media (max-width: 768px) {
-  .advantages-section {
-    padding: 40px 0;
-  }
-
   .advantage-title {
     font-size: 32px;
     line-height: 40px;
-  }
-
-  .advantage-description {
-    font-size: 16px;
-    line-height: 24px;
   }
 
   .advantage-image {
@@ -909,17 +1363,9 @@ const onLearnMore = () => {
 
 // Адаптив для планшетов
 @media (max-width: 768px) {
-  .space-content {
-    flex-direction: column;
-    text-align: center;
-    gap: 40px;
-  }
-
-  .space-text {
-    text-align: center;
-  }
-
   .space-description {
+    font-size: 22px;
+    line-height: 28px;
     max-width: 100%;
   }
 
@@ -943,7 +1389,7 @@ const onLearnMore = () => {
   }
 
   .space-image {
-    max-width: 250px;
+    min-width: 250px;
   }
 }
 
@@ -958,13 +1404,18 @@ const onLearnMore = () => {
   }
 
   .hero-section {
-    height: 800px;
+    min-height: 800px;
+  }
+
+  .space-title {
+    font-size: 40px;
+    line-height: 44px;
   }
 }
 
 @media (max-width: 768px) {
   .hero-section {
-    height: 600px;
+    min-height: 600px;
   }
 
   .hero-topic {
@@ -973,6 +1424,7 @@ const onLearnMore = () => {
 
   .hero-text {
     font-size: 18px;
+    width: 80%;
   }
 
   .main-content-wrapper {
@@ -982,7 +1434,7 @@ const onLearnMore = () => {
 
 @media (max-width: 599px) {
   .hero-section {
-    height: 500px;
+    min-height: 500px;
   }
 
   .hero-topic {
