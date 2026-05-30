@@ -104,7 +104,7 @@
 
     <!-- Кнопка наверх -->
     <q-page-sticky position="bottom-right" :offset="[60, 60]">
-      <q-btn round color="#FBE1BA" @click="scrollToTop">
+      <q-btn round style="z-index: 9999" @click="scrollToTop">
         <q-img src="~assets/Button_icon.svg" class="btn-icon" fit="contain" />
       </q-btn>
     </q-page-sticky>
@@ -374,8 +374,8 @@ watch(
 
 .mobile-menu-link {
   font-family: 'Mulish', sans-serif;
-  font-size: 28px;
-  font-weight: 500;
+  font-size: 32px;
+  font-weight: 700;
   color: #131314;
   text-decoration: none;
   transition: opacity 0.2s ease;
@@ -390,7 +390,7 @@ watch(
 }
 
 .mobile-contacts {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 .mobile-contact-title {
@@ -412,7 +412,7 @@ watch(
 .mobile-social {
   display: flex;
   justify-content: center;
-  gap: 24px;
+  gap: 12px;
 }
 
 .mobile-social-icon {
@@ -615,8 +615,8 @@ watch(
 }
 
 .btn-icon {
-  width: 24px;
-  height: 24px;
+  width: 50px;
+  height: 50px;
 }
 
 // Адаптив для планшетов
@@ -635,16 +635,27 @@ watch(
   }
 
   .footer-section {
-    padding: 50px 20px 25px;
+    padding: 40px 40px 25px;
   }
 
   .footer-grid {
-    grid-template-columns: 1fr;
-    gap: 35px;
+    // grid-template-columns: 1fr;
+    gap: 60px;
+  }
+
+  .footer-grid .footer-col:nth-child(2),
+  .footer-col:nth-child(3) {
+    display: none;
   }
 
   .footer-logo {
-    justify-content: center;
+    justify-content: left;
+    padding-bottom: 40px;
+  }
+
+  .footer-logo-text {
+    font-size: 12px;
+    line-height: 16px;
   }
 
   .footer-links {
@@ -652,6 +663,10 @@ watch(
     text-align: center;
   }
 
+  .footer-col-right[data-v-22686b16] {
+    text-align: left;
+    align-items: flex-start;
+  }
   .footer-social {
     align-items: center;
   }

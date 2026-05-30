@@ -596,7 +596,7 @@ const playPodcast = (podcast: any) => {
 .main-content-wrapper {
   margin: 0 auto;
   position: relative;
-  z-index: 3;
+  // z-index: 3;
 }
 
 .main-card {
@@ -1030,7 +1030,7 @@ const playPodcast = (podcast: any) => {
 .podcasts-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
+  gap: 24px;
   margin-bottom: 40px;
 }
 
@@ -1147,7 +1147,7 @@ const playPodcast = (podcast: any) => {
 @media (max-width: 1024px) {
   .podcasts-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
+    gap: 20px;
   }
 
   .podcasts-title {
@@ -1158,21 +1158,33 @@ const playPodcast = (podcast: any) => {
 // Адаптив для мобильных
 @media (max-width: 768px) {
   .podcasts-section {
-    padding: 60px 20px 80px;
+    padding: 60px 40px 60px;
+    border-radius: 60px;
   }
 
   .podcasts-grid {
-    grid-template-columns: 1fr;
-    gap: 32px;
+    // grid-template-columns: 1fr;
+    gap: 20px;
   }
 
   .podcasts-title {
     font-size: 48px;
   }
 
+  .podcast-title {
+    font-size: 22px;
+  }
   .podcasts-description {
     font-size: 16px;
     margin-bottom: 40px;
+  }
+  .show-more-btn {
+    padding: 10px 30px;
+    font-size: 14px;
+  }
+  .btn-icon {
+    width: 20px;
+    height: 20px;
   }
 }
 
