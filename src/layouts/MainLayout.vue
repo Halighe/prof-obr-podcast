@@ -19,7 +19,6 @@
             >Виды деятельности</a
           >
           <router-link to="/podcasts" class="menu-link">Подкасты</router-link>
-          <!-- <a href="#podcasts" class="menu-link">Подкасты</a> -->
           <a
             href="https://school-portal.ru"
             target="_blank"
@@ -29,42 +28,13 @@
           >
         </div>
 
-        <!-- Мобильное меню (гамбургер) -->
-        <q-btn
-          v-if="$q.screen.lt.md"
-          flat
-          round
-          dense
-          icon="menu"
-          class="menu-btn"
-          @click="mobileMenuOpen = !mobileMenuOpen"
-        />
+        <!-- Кастомная кнопка бургер-меню -->
+        <div v-if="$q.screen.lt.md" class="burger-btn" @click="mobileMenuOpen = !mobileMenuOpen">
+          <span class="burger-line line-1"></span>
+          <span class="burger-line line-2"></span>
+          <span class="burger-line line-3"></span>
+        </div>
       </q-toolbar>
-
-      <!-- Выпадающее меню для мобильных -->
-      <q-drawer
-        v-model="mobileMenuOpen"
-        side="right"
-        overlay
-        bordered
-        :width="250"
-        class="mobile-drawer"
-      >
-        <q-list>
-          <q-item clickable v-close-popup to="/">
-            <q-item-section>Главная</q-item-section>
-          </q-item>
-          <q-item clickable v-close-popup @click="scrollTo('activities')">
-            <q-item-section>Виды деятельности</q-item-section>
-          </q-item>
-          <q-item clickable v-close-popup @click="scrollTo('podcasts')">
-            <q-item-section>Подкасты</q-item-section>
-          </q-item>
-          <q-item clickable v-close-popup @click="openExternalLink('https://school-portal.ru')">
-            <q-item-section>Школьный портал</q-item-section>
-          </q-item>
-        </q-list>
-      </q-drawer>
     </q-header>
 
     <!-- Основной контент -->
@@ -72,11 +42,73 @@
       <router-view />
     </q-page-container>
 
+    <!-- Мобильное меню (полноэкранное) -->
+    <div v-if="$q.screen.lt.md" class="mobile-menu-overlay" :class="{ open: mobileMenuOpen }">
+      <div class="mobile-menu-header">
+        <router-link to="/" class="mobile-logo-link" @click="mobileMenuOpen = false">
+          <img src="~assets/logo.svg" alt="Логотип" class="mobile-logo-img" />
+        </router-link>
+        <div class="burger-btn mobile-close-btn" @click="mobileMenuOpen = false">
+          <span class="burger-line line-1"></span>
+          <span class="burger-line line-2"></span>
+          <span class="burger-line line-3"></span>
+        </div>
+      </div>
+
+      <div class="mobile-menu-content">
+        <div class="mobile-menu-links">
+          <router-link to="/" class="mobile-menu-link" @click="mobileMenuOpen = false">
+            Главная
+          </router-link>
+          <a
+            href="#activities"
+            class="mobile-menu-link"
+            @click.prevent="scrollToMobile('activities')"
+          >
+            Виды деятельности
+          </a>
+          <router-link to="/podcasts" class="mobile-menu-link" @click="mobileMenuOpen = false">
+            Подкасты
+          </router-link>
+          <a
+            href="https://school-portal.ru"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="mobile-menu-link"
+            @click="mobileMenuOpen = false"
+          >
+            Школьный портал
+          </a>
+        </div>
+
+        <div class="mobile-menu-footer">
+          <div class="mobile-contacts">
+            <div class="mobile-contact-title">Контакты</div>
+            <div class="mobile-contact-text">
+              Адрес: 614000, Пермский край, город Пермь, Сибирская ул., д. 17
+            </div>
+            <div class="mobile-contact-text">8 (347) 212-70-50</div>
+            <div class="mobile-contact-text">do@perm.permkrai.ru</div>
+          </div>
+          <div class="mobile-social">
+            <a href="https://maximum.ru" target="_blank" rel="noopener noreferrer">
+              <q-img src="~assets/max-icon.svg" class="mobile-social-icon" fit="contain" />
+            </a>
+            <a href="https://vk.com" target="_blank" rel="noopener noreferrer">
+              <q-img src="~assets/vk-icon.svg" class="mobile-social-icon" fit="contain" />
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Кнопка наверх -->
     <q-page-sticky position="bottom-right" :offset="[60, 60]">
-      <q-btn round color="#FBE1BA" @click="scrollToTop"
-        ><q-img src="~assets/Button_icon.svg" class="btn-icon" fit="contain"
-      /></q-btn>
+      <q-btn round color="#FBE1BA" @click="scrollToTop">
+        <q-img src="~assets/Button_icon.svg" class="btn-icon" fit="contain" />
+      </q-btn>
     </q-page-sticky>
+
     <!-- Футер -->
     <div class="footer-section" :class="{ 'podcasts-footer': $route.path === '/podcasts' }">
       <div class="footer-container">
@@ -153,23 +185,41 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { useQuasar } from 'quasar';
 
 const $q = useQuasar();
+const route = useRoute();
+const router = useRouter();
 const mobileMenuOpen = ref(false);
 
 // Функция для плавного скролла к секции на текущей странице
-const scrollTo = (sectionId) => {
+const scrollTo = (sectionId: string) => {
   const element = document.getElementById(sectionId);
   if (element) {
     element.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
+};
+
+// Функция для мобильного меню с проверкой страницы
+const scrollToMobile = (sectionId: string) => {
   mobileMenuOpen.value = false;
+
+  // Если мы на главной странице
+  if (route.path === '/') {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  } else {
+    // Если на другой странице — переходим на главную с якорем
+    router.push(`/#${sectionId}`);
+  }
 };
 
 // Открытие внешней ссылки
-const openExternalLink = (url) => {
+const openExternalLink = (url: string) => {
   window.open(url, '_blank', 'noopener,noreferrer');
 };
 
@@ -179,25 +229,40 @@ const scrollToTop = () => {
     behavior: 'smooth',
   });
 };
+
+// Закрываем меню при смене маршрута
+watch(
+  () => route.path,
+  () => {
+    mobileMenuOpen.value = false;
+  },
+);
 </script>
 
 <style scoped lang="scss">
 .header {
   background-color: white !important;
-  box-shadow: none !important; // убираем тень
+  box-shadow: none !important;
   border-bottom: none !important;
   color: #131314;
   padding: 8px 0;
+  position: relative;
+  z-index: 100;
 }
 
 .container {
   max-width: 1600px;
   width: 100%;
   margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .logo {
   padding: 0;
+  flex: 1;
 }
 
 .logo-link {
@@ -213,13 +278,149 @@ const scrollToTop = () => {
   width: auto;
 }
 
-.logo-text {
-  font-family: 'Mulish', sans-serif;
-  font-weight: 700;
-  font-size: 20px;
-  color: #131314;
+// Кастомная кнопка бургер-меню
+.burger-btn {
+  width: 30px;
+  height: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  z-index: 200;
+  position: relative;
+
+  .burger-line {
+    display: block;
+    height: 2px;
+    background-color: #131314;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+  }
+
+  .line-1 {
+    width: 30px;
+  }
+
+  .line-2 {
+    width: 23px;
+    align-self: flex-end;
+  }
+
+  .line-3 {
+    width: 15px;
+    align-self: flex-end;
+  }
 }
 
+// Полноэкранное мобильное меню
+.mobile-menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: white;
+  z-index: 150;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+
+  &.open {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+.mobile-menu-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 24px;
+  min-height: 72px; // Фиксированная высота как у хедера
+}
+
+.mobile-logo-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.mobile-logo-img {
+  height: 80px;
+  width: auto;
+}
+
+.mobile-close-btn {
+  position: static;
+  transform: none;
+  margin: 0; // Добавьте
+  padding: 0; // Добавьте
+}
+
+.mobile-menu-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: calc(100% - 80px);
+  padding: 40px 24px 50px;
+}
+
+.mobile-menu-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+
+.mobile-menu-link {
+  font-family: 'Mulish', sans-serif;
+  font-size: 28px;
+  font-weight: 500;
+  color: #131314;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
+.mobile-menu-footer {
+  text-align: center;
+}
+
+.mobile-contacts {
+  margin-bottom: 30px;
+}
+
+.mobile-contact-title {
+  font-family: 'Mulish', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #505468;
+  margin-bottom: 16px;
+}
+
+.mobile-contact-text {
+  font-family: 'Mulish', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #4b5563;
+  margin-bottom: 8px;
+}
+
+.mobile-social {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+}
+
+.mobile-social-icon {
+  width: 40px;
+  height: 40px;
+}
+
+// Десктопное меню
 .desktop-menu {
   display: flex;
   gap: 32px;
@@ -246,8 +447,21 @@ const scrollToTop = () => {
   padding-bottom: 4px;
 }
 
-.menu-btn {
-  color: #131314;
+// Мобильные стили для бургера
+@media (max-width: 1023px) {
+  .desktop-menu {
+    display: none;
+  }
+
+  .burger-btn {
+    display: flex;
+  }
+}
+
+@media (min-width: 1024px) {
+  .burger-btn {
+    display: none !important;
+  }
 }
 
 // Футер
@@ -258,7 +472,7 @@ const scrollToTop = () => {
 }
 
 .podcasts-footer {
-  background: #dce0f4; // Цвет, как у секции подкастов
+  background: #dce0f4;
   border-radius: 100px 100px 0px 0px;
 }
 
@@ -314,13 +528,13 @@ const scrollToTop = () => {
   transition: color 0.3s ease;
 
   &:hover {
-    color: #ffffff;
+    color: #f5a623;
   }
 }
 
 .footer-social {
   display: flex;
-  flex-direction: row; // Иконки в одну строку
+  flex-direction: row;
   gap: 12px;
 }
 
@@ -336,7 +550,7 @@ const scrollToTop = () => {
   transition: color 0.3s ease;
 
   &:hover {
-    color: #ffffff;
+    color: #f5a623;
   }
 }
 
@@ -345,9 +559,11 @@ const scrollToTop = () => {
   height: 40px;
   margin-top: 10px;
 }
+
 .footer-partners {
   border-top: 1px solid #dce0f4;
 }
+
 .footer-bottom {
   max-width: 350px;
   padding-top: 30px;
@@ -357,6 +573,7 @@ const scrollToTop = () => {
   align-items: center;
   margin: 0 auto;
 }
+
 .footer-partner-text {
   width: 85px;
   font-family: 'Mulish', sans-serif;
@@ -396,33 +613,17 @@ const scrollToTop = () => {
   height: 40px;
   margin-left: 8px;
 }
+
+.btn-icon {
+  width: 24px;
+  height: 24px;
+}
+
 // Адаптив для планшетов
 @media (max-width: 1024px) {
   .footer-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 40px;
-  }
-}
-
-// Мобильные стили
-@media (max-width: 1023px) {
-  .desktop-menu {
-    display: none;
-  }
-}
-
-@media (min-width: 1024px) {
-  .menu-btn {
-    display: none;
-  }
-}
-
-.mobile-drawer {
-  background: white;
-  .q-item {
-    font-family: 'Mulish', sans-serif;
-    font-weight: 600;
-    color: #131314;
   }
 }
 
@@ -432,6 +633,7 @@ const scrollToTop = () => {
     height: 55px;
     width: auto;
   }
+
   .footer-section {
     padding: 50px 20px 25px;
   }
@@ -452,6 +654,31 @@ const scrollToTop = () => {
 
   .footer-social {
     align-items: center;
+  }
+
+  .mobile-menu-link {
+    font-size: 24px;
+  }
+
+  .mobile-menu-content {
+    padding: 30px 20px 40px;
+  }
+
+  .mobile-menu-header {
+    padding: 0px 24px;
+  }
+
+  .mobile-logo-img {
+    height: 55px;
+  }
+}
+
+.mobile-drawer {
+  background: white;
+  .q-item {
+    font-family: 'Mulish', sans-serif;
+    font-weight: 600;
+    color: #131314;
   }
 }
 </style>

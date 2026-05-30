@@ -29,12 +29,12 @@
 
     <!-- Основной контент в q-card -->
     <div class="main-content-wrapper">
-      <q-card class="main-card" flat bordered>
+      <q-card class="main-card" flat>
         <q-card-section>
           <!-- Блок "Пространство для детей, родителей и педагогов" с фоновой картинкой -->
           <div class="space-section">
             <!-- Фоновая картинка на всю ширину -->
-            <div class="space-bg"></div>
+            <!-- <div class="space-bg"></div> -->
 
             <div class="space-content-wrapper">
               <div class="space-content">
@@ -638,10 +638,7 @@ const playPodcast = (podcast: any) => {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('~assets/Rectangle 240654981.svg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  // box-shadow: 0px -20px 0px 0px #fbc6ba;
   opacity: 0.5; // прозрачность фона, можно убрать или изменить
   pointer-events: none;
 }
@@ -1224,21 +1221,52 @@ const playPodcast = (podcast: any) => {
     margin-bottom: 40px;
   }
 
+  // Изменяем овал на горизонтальный скролл
+  .activities-slider {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch; // Плавный скролл на iOS
+    scrollbar-width: thin; // Тонкий скроллбар для Firefox
+
+    // Скрываем скроллбар для Chrome/Safari (опционально)
+    &::-webkit-scrollbar {
+      height: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: #f0f0f0;
+      border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #fbe1ba;
+      border-radius: 4px;
+    }
+  }
+
   .activities-oval {
-    flex-direction: column;
-    border-radius: 60px;
-    gap: 16px;
-    padding: 20px;
+    display: flex;
+    flex-direction: row; // Оставляем горизонтальное расположение
+    align-items: center;
+    background: #fff9f6;
+    border-radius: 100px;
+    padding: 4px;
+    width: max-content; // Ширина по содержимому
+    min-width: 100%; // Минимальная ширина на всю ширину контейнера
+    gap: 8px;
   }
 
   .activity-switch {
-    width: 100%;
+    width: auto; // Убираем width: 100%
     justify-content: center;
+    white-space: nowrap; // Запрещаем перенос текста
+    flex-shrink: 0; // Запрещаем сжатие элементов
   }
 
   .activity-text {
-    font-size: 18px;
-    white-space: normal;
+    font-size: 16px;
+    white-space: nowrap; // Текст в одну строку
   }
 }
 
