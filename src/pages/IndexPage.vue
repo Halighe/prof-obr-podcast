@@ -1194,9 +1194,6 @@ const closeVideoDialog = () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: white;
-  backdrop-filter: blur(20px);
-  border-radius: 50%;
   cursor: pointer;
   z-index: 10;
   transition: all 0.3s ease;
