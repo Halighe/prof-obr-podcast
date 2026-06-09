@@ -13,3 +13,12 @@
   font-weight: 700;
   font-style: bold;
 }
+
+.q-dialog__backdrop {
+  background: rgba(6, 9, 31, 0.05) !important;
+  backdrop-filter: blur(20px) !important;
+}
+
+.q-dialog__inner--minimized {
+  padding: 0px;
+}

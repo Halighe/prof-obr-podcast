@@ -49,12 +49,12 @@
       </div>
     </div>
     <!-- Модальное окно для видео -->
-    <q-dialog v-model="videoDialogVisible" persistent class="video">
-      <div class="video-modal-close" @click="closeVideoDialog">
-        <q-icon name="close" size="24px" />
-      </div>
-      <div class="video-modal">
-        <div class="video-container">
+    <q-dialog v-model="videoDialogVisible" persistent class="video-dialog">
+      <div class="video-modal-wrapper">
+        <div class="video-modal-close" @click="closeVideoDialog">
+          <q-icon name="close" size="24px" />
+        </div>
+        <div class="video-modal">
           <div class="video-container" v-html="currentEmbedCode"></div>
         </div>
       </div>
@@ -63,80 +63,27 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useQuasar } from 'quasar';
 
 const $q = useQuasar();
 
 const loadingMore = ref(false);
 const videoDialogVisible = ref(false);
+const loadingPodcasts = ref(false);
 
-// Данные подкастов
-const allPodcasts = ref([
-  {
-    title: 'Как выбрать профессию?',
-    author: 'Елена Смирнова',
-    embedCode:
-      '<iframe src="https://vkvideo.ru/video_ext.php?oid=-45606327&id=456239452&hash=f21209b03c1d90e9&hd=4" width="1920" height="1080" allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock;" frameborder="0" allowfullscreen></iframe>',
-    image: '~assets/video.svg',
-  },
-  {
-    title: 'IT-сфера: мифы и реальность',
-    author: 'Алексей Иванов',
-    embedCode:
-      '<iframe src="https://vkvideo.ru/video_ext.php?oid=-45606327&id=456239452&hash=f21209b03c1d90e9&hd=4" width="1920" height="1080" allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock;" frameborder="0" allowfullscreen></iframe>',
-    image: '~assets/video.svg',
-  },
-  {
-    title: 'Профессия будущего',
-    author: 'Мария Петрова',
-    embedCode:
-      '<iframe src="https://vkvideo.ru/video_ext.php?oid=-45606327&id=456239452&hash=f21209b03c1d90e9&hd=4" width="1920" height="1080" allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock;" frameborder="0" allowfullscreen></iframe>',
-    image: '~assets/video.svg',
-  },
-  {
-    title: 'Как стать инженером?',
-    author: 'Дмитрий Сидоров',
-    embedCode:
-      '<iframe src="https://vkvideo.ru/video_ext.php?oid=-45606327&id=456239452&hash=f21209b03c1d90e9&hd=4" width="1920" height="1080" allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock;" frameborder="0" allowfullscreen></iframe>',
-    image: '~assets/video.svg',
-  },
-  {
-    title: 'Творческие профессии',
-    author: 'Анна Козлова',
-    embedCode:
-      '<iframe src="https://vkvideo.ru/video_ext.php?oid=-45606327&id=456239452&hash=f21209b03c1d90e9&hd=4" width="1920" height="1080" allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock;" frameborder="0" allowfullscreen></iframe>',
-    image: '~assets/video.svg',
-  },
-  {
-    title: 'Медицина сегодня',
-    author: 'Татьяна Морозова',
-    embedCode:
-      '<iframe src="https://vkvideo.ru/video_ext.php?oid=-45606327&id=456239452&hash=f21209b03c1d90e9&hd=4" width="1920" height="1080" allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock;" frameborder="0" allowfullscreen></iframe>',
-    image: '~assets/video.svg',
-  },
-  {
-    title: 'Бизнес и стартапы',
-    author: 'Павел Новиков',
-    embedCode:
-      '<iframe src="https://vkvideo.ru/video_ext.php?oid=-45606327&id=456239452&hash=f21209b03c1d90e9&hd=4" width="1920" height="1080" allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock;" frameborder="0" allowfullscreen></iframe>',
-    image: '~assets/video.svg',
-  },
-  {
-    title: 'Педагогика нового времени',
-    author: 'Ольга Соколова',
-    embedCode:
-      '<iframe src="https://vkvideo.ru/video_ext.php?oid=-45606327&id=456239452&hash=f21209b03c1d90e9&hd=4" width="1920" height="1080" allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock;" frameborder="0" allowfullscreen></iframe>',
-    image: '~assets/video.svg',
-  },
-  {
-    title: 'Экология и устойчивое развитие',
-    author: 'Игорь Васильев',
-    embedCode:
-      '<iframe src="https://vkvideo.ru/video_ext.php?oid=-45606327&id=456239452&hash=f21209b03c1d90e9&hd=4" width="1920" height="1080" allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock;" frameborder="0" allowfullscreen></iframe>',
-    image: '~assets/video.svg',
-  },
-]);
+// Интерфейс для подкаста
+interface Podcast {
+  id: number;
+  title: string;
+  videoUrl: string;
+  image: string;
+  sort_order: number;
+  createdAt: string;
+}
+
+// Данные подкастов из API
+const allPodcasts = ref<Podcast[]>([]);
 
 // Количество подкастов для отображения (начальные 6 = 2 ряда по 3)
 const visibleCount = ref(6);
@@ -155,7 +102,6 @@ const hasMorePodcasts = computed(() => {
 const loadMorePodcasts = () => {
   loadingMore.value = true;
 
-  // Имитация загрузки (можно убрать или оставить для эффекта)
   setTimeout(() => {
     visibleCount.value = allPodcasts.value.length;
     loadingMore.value = false;
@@ -169,30 +115,177 @@ const loadMorePodcasts = () => {
   }, 500);
 };
 
-const onLearnMore = () => {
-  $q.notify({
-    message: 'Здесь будет дополнительная информация',
-    color: 'primary',
-    position: 'top',
-    icon: 'info',
-  });
+// Функция для получения подкастов с API (с заглушкой)
+const fetchPodcasts = async () => {
+  loadingPodcasts.value = true;
+
+  // Показываем индикатор загрузки
+  // $q.loading.show({
+  //   message: 'Загрузка подкастов...',
+  //   boxClass: 'bg-primary text-white',
+  // });
+
+  try {
+    // ---------- ЗАГЛУШКА (имитация ответа от сервера) ----------
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    const mockData = {
+      data: [
+        {
+          id: 1,
+          title: 'Как выбрать профессию?',
+          vk_url: 'https://vkvideo.ru/video-211232966_456241335',
+          cover_image:
+            'http://127.0.0.1:8000/storage/podcasts/YHxbXaLDMjcKPfV4PwMZTuN3nRAKZYYTrvzmCEIb.png',
+          sort_order: 2,
+          created_at: '15.05.2026',
+        },
+        {
+          id: 2,
+          title: 'IT-сфера: мифы и реальность',
+          vk_url: 'https://vkvideo.ru/video-211232966_456241335',
+          cover_image:
+            'http://127.0.0.1:8000/storage/podcasts/mkR6K5jvq3nRiIEk3o4TdYxIZlYsQ4peJyYOUEnY.png',
+          sort_order: 5,
+          created_at: '15.05.2026',
+        },
+        {
+          id: 3,
+          title: 'Профессия будущего',
+          vk_url: 'https://vkvideo.ru/video-211232966_456241335',
+          cover_image:
+            'http://127.0.0.1:8000/storage/podcasts/YHxbXaLDMjcKPfV4PwMZTuN3nRAKZYYTrvzmCEIb.png',
+          sort_order: 1,
+          created_at: '14.05.2026',
+        },
+        {
+          id: 4,
+          title: 'Как стать инженером?',
+          vk_url: 'https://vkvideo.ru/video-211232966_456241335',
+          cover_image:
+            'http://127.0.0.1:8000/storage/podcasts/mkR6K5jvq3nRiIEk3o4TdYxIZlYsQ4peJyYOUEnY.png',
+          sort_order: 3,
+          created_at: '13.05.2026',
+        },
+        {
+          id: 5,
+          title: 'Творческие профессии',
+          vk_url: 'https://vkvideo.ru/video-211232966_456241335',
+          cover_image:
+            'http://127.0.0.1:8000/storage/podcasts/YHxbXaLDMjcKPfV4PwMZTuN3nRAKZYYTrvzmCEIb.png',
+          sort_order: 4,
+          created_at: '12.05.2026',
+        },
+        {
+          id: 6,
+          title: 'Медицина сегодня',
+          vk_url: 'https://vkvideo.ru/video-211232966_456241335',
+          cover_image:
+            'http://127.0.0.1:8000/storage/podcasts/mkR6K5jvq3nRiIEk3o4TdYxIZlYsQ4peJyYOUEnY.png',
+          sort_order: 6,
+          created_at: '11.05.2026',
+        },
+        {
+          id: 7,
+          title: 'Бизнес и стартапы',
+          vk_url: 'https://vkvideo.ru/video-211232966_456241335',
+          cover_image:
+            'http://127.0.0.1:8000/storage/podcasts/YHxbXaLDMjcKPfV4PwMZTuN3nRAKZYYTrvzmCEIb.png',
+          sort_order: 7,
+          created_at: '10.05.2026',
+        },
+        {
+          id: 8,
+          title: 'Педагогика нового времени',
+          vk_url: 'https://vkvideo.ru/video-211232966_456241335',
+          cover_image:
+            'http://127.0.0.1:8000/storage/podcasts/mkR6K5jvq3nRiIEk3o4TdYxIZlYsQ4peJyYOUEnY.png',
+          sort_order: 8,
+          created_at: '09.05.2026',
+        },
+        {
+          id: 9,
+          title: 'Экология и устойчивое развитие',
+          vk_url: 'https://vkvideo.ru/video-211232966_456241335',
+          cover_image:
+            'http://127.0.0.1:8000/storage/podcasts/YHxbXaLDMjcKPfV4PwMZTuN3nRAKZYYTrvzmCEIb.png',
+          sort_order: 9,
+          created_at: '08.05.2026',
+        },
+      ],
+    };
+
+    // Сортируем по sort_order
+    const sortedData = [...mockData.data].sort((a, b) => a.sort_order - b.sort_order);
+
+    // Преобразуем в нужный формат
+    allPodcasts.value = sortedData.map((item) => ({
+      id: item.id,
+      title: item.title,
+      videoUrl: item.vk_url,
+      image: item.cover_image,
+      sort_order: item.sort_order,
+      createdAt: item.created_at,
+    }));
+  } catch (error) {
+    console.error('Ошибка при загрузке подкастов:', error);
+    $q.notify({
+      message: 'Не удалось загрузить подкасты',
+      color: 'negative',
+      position: 'top',
+      icon: 'error',
+    });
+  } finally {
+    loadingPodcasts.value = false;
+    $q.loading.hide();
+  }
 };
 
-const currentEmbedCode = ref(''); // Вместо currentVideoUrl
+// Функция для преобразования ссылки VK Video в embed-код
+const getEmbedCodeFromUrl = (url: string): string => {
+  const match = url.match(/video-?(\d+)_(\d+)/);
+  if (match) {
+    const ownerId = match[1];
+    const videoId = match[2];
+    const finalOwnerId = url.includes('video-') ? `-${ownerId}` : ownerId;
+    return `<iframe
+      src="https://vkvideo.ru/video_ext.php?oid=${finalOwnerId}&id=${videoId}&hd=1&autoplay=1"
+      width="100%"
+      height="100%"
+      allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock"
+      frameborder="0"
+      allowfullscreen
+    ></iframe>`;
+  }
+  console.warn('Не удалось распознать ссылку на видео:', url);
+  return '';
+};
 
-const playPodcast = (podcast: any) => {
-  if (podcast.embedCode) {
-    currentEmbedCode.value = podcast.embedCode;
+const currentEmbedCode = ref('');
+
+const playPodcast = (podcast: Podcast) => {
+  if (podcast.videoUrl) {
+    currentEmbedCode.value = getEmbedCodeFromUrl(podcast.videoUrl);
     videoDialogVisible.value = true;
   } else {
-    // Уведомление об ошибке
+    $q.notify({
+      message: 'Ссылка на видео отсутствует',
+      color: 'warning',
+      position: 'top',
+      timeout: 2000,
+    });
   }
 };
 
 const closeVideoDialog = () => {
   videoDialogVisible.value = false;
-  currentEmbedCode.value = ''; // Очищаем, чтобы остановить видео
+  currentEmbedCode.value = '';
 };
+
+// Загружаем подкасты при монтировании компонента
+onMounted(() => {
+  void fetchPodcasts();
+});
 </script>
 
 <style scoped lang="scss">
@@ -361,10 +454,13 @@ const closeVideoDialog = () => {
 }
 
 // Модальное окно для видео
-.video {
-  background: #ffffff;
-  backdrop-filter: blur(20px);
+.video-dialog {
+  :deep(.q-dialog__backdrop) {
+    background: #06091f0d !important;
+    backdrop-filter: blur(20px) !important;
+  }
 }
+
 .video-modal {
   position: relative;
   width: 90vw;
@@ -387,6 +483,11 @@ const closeVideoDialog = () => {
   }
 }
 
+.video-modal-wrapper {
+  max-width: 90vw !important;
+  max-height: 90vh !important;
+}
+
 .video-modal-close {
   position: absolute;
   top: 40px;
@@ -399,12 +500,12 @@ const closeVideoDialog = () => {
   cursor: pointer;
   z-index: 10;
   transition: all 0.3s ease;
-  color: black;
+  color: #6f552e;
 
-  &:hover {
-    background: rgba(0, 0, 0, 0.7);
-    transform: scale(1.05);
-  }
+  // &:hover {
+  //   background: rgba(0, 0, 0, 0.7);
+  //   transform: scale(1.05);
+  // }
 }
 
 .video-container {
@@ -417,7 +518,7 @@ const closeVideoDialog = () => {
   :deep(iframe) {
     width: 100%;
     height: 100%;
-    border-radius: 40px;
+    // border-radius: 40px;
     border: none;
   }
 }
@@ -431,13 +532,15 @@ const closeVideoDialog = () => {
 
 // Адаптив для мобильных
 @media (max-width: 768px) {
+  .podcast-title {
+    font-size: 22px;
+  }
   .video-modal {
-    width: 95vw;
-    border-radius: 30px;
+    border-radius: 28px;
   }
 
   .video-iframe {
-    border-radius: 20px;
+    border-radius: 28px;
   }
 
   .video-modal-close {
@@ -467,7 +570,7 @@ const closeVideoDialog = () => {
 // Адаптив для мобильных
 @media (max-width: 768px) {
   .podcasts-section {
-    padding: 0px 20px 80px;
+    padding: 0px 20px 0px;
   }
 
   .podcasts-grid {

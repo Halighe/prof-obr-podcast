@@ -79,7 +79,7 @@
                         Обеспечение лёгкого доступа к актуальной информации о возможностях развития
                         в рамках учебной, внеурочной и дополнительной деятельности
                       </div>
-                      <div class="advantage-row">
+                      <div class="advantage-row" id="row-block">
                         <!-- Первая картинка слева -->
                         <div class="advantage-icon-left">
                           <q-img
@@ -111,7 +111,7 @@
                   </div>
 
                   <!-- Вторая колонка: две картинки в строку -->
-                  <div class="col-12 col-md-6">
+                  <div class="col-12 col-md-6 advantages-second-col">
                     <div class="row q-col-gutter-md">
                       <div class="col-6">
                         <div class="advantage-image-small">
@@ -132,6 +132,59 @@
                             :no-native-menu="true"
                           />
                         </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="advantage-tab">
+                    <div class="advantage-tab-col-1">
+                      <div class="advantage-row">
+                        <!-- Первая картинка слева -->
+                        <div class="advantage-icon-left">
+                          <q-img
+                            src="~assets/Vector 1.svg"
+                            class="advantage-icon"
+                            fit="contain"
+                            :no-native-menu="true"
+                          />
+                        </div>
+
+                        <!-- Текст по центру -->
+                        <div class="advantage-text">
+                          <div class="advantage-description">
+                            демонстрация опыта школы к выбору будущей профессии
+                          </div>
+                        </div>
+
+                        <!-- Вторая картинка справа -->
+                        <div class="advantage-icon-right">
+                          <q-img
+                            src="~assets/Vector 2.svg"
+                            class="advantage-icon"
+                            fit="contain"
+                            :no-native-menu="true"
+                          />
+                        </div>
+                      </div>
+
+                      <div class="advantage-image-small">
+                        <q-img
+                          src="~assets/png-tab.svg"
+                          class="advantage-img-small"
+                          fit="contain"
+                          :no-native-menu="true"
+                        />
+                      </div>
+                    </div>
+
+                    <div class="advantage-tab-col-2">
+                      <div class="advantage-image-small">
+                        <q-img
+                          src="~assets/Frame 2131330349-tab.svg"
+                          class="advantage-img-small"
+                          fit="contain"
+                          :no-native-menu="true"
+                        />
                       </div>
                     </div>
                   </div>
@@ -186,153 +239,76 @@
         <!-- Учебная деятельность -->
         <div v-if="activeActivity === 'study'" class="activity-content">
           <div class="cards-grid">
-            <!-- Карточка 1 -->
-            <div class="activity-card card-1">
+            <div v-for="card in studyCards" :key="card.id" class="activity-card card-1">
               <div class="card-header">
-                <q-img src="~assets/icon.svg" class="card-icon" fit="contain" />
-                <div class="card-title">Инженерные классы</div>
+                <q-img :src="card.icon" class="card-icon" fit="contain" />
+                <div class="card-title">{{ card.title }}</div>
               </div>
-              <div class="card-text">
-                Специализированная программа подготовки будущих инженеров. Ученики изучают основы
-                робототехники, 3D-моделирования, программирования и работы с современным
-                оборудованием. Специализированная программа подготовки будущих инженеров.
-              </div>
+              <div class="card-text" v-html="card.description"></div>
               <div class="card-files">
                 <div class="files-info">
                   <div class="docs-link">
                     <q-img src="~assets/SVG.svg" class="docs-icon" fit="contain" />
                     <span>Документы</span>
                   </div>
-                  <span class="files-count">2 файла</span>
+                  <span class="files-count"
+                    >{{ card.documents.length }} {{ declensionFiles(card.documents.length) }}</span
+                  >
                 </div>
                 <div class="files-list">
-                  <div class="file-item">
+                  <!-- Отображаем только первые 3 файла или все, если showAll -->
+                  <div
+                    v-for="doc in getVisibleFiles(card.documents, card.id, 'study')"
+                    :key="doc.id"
+                    class="file-item"
+                  >
                     <div class="file-info">
-                      <q-img src="~assets/icon-pdf.svg" class="file-icon" fit="contain" />
+                      <q-img
+                        :src="
+                          doc.file_path.toLowerCase().endsWith('.pdf')
+                            ? 'src/assets/icon-pdf.svg'
+                            : 'src/assets/icon-docx.svg'
+                        "
+                        class="file-icon"
+                        fit="contain"
+                      />
                       <div class="file-details">
-                        <span class="file-name">Презентация «Инженерная вертикаль»</span>
-                        <span class="file-size">PDF • 2.4 MB</span>
+                        <span class="file-name" :title="doc.original_name">{{
+                          doc.original_name
+                        }}</span>
+                        <span class="file-size"
+                          >{{ getFileExtension(doc.file_path) }} •
+                          {{ formatFileSize(doc.file_size) }}</span
+                        >
                       </div>
                     </div>
-                    <q-img src="~assets/icon_download.svg" class="download-icon" fit="contain" />
+                    <a :href="doc.file_path" download target="_blank" class="download-link">
+                      <q-img src="~assets/icon_download.svg" class="download-icon" fit="contain" />
+                    </a>
                   </div>
-                  <div class="file-item">
-                    <div class="file-info">
-                      <q-img src="~assets/icon-docx.svg" class="file-icon" fit="contain" />
-                      <div class="file-details">
-                        <span class="file-name">Информация о приеме в 7 класс</span>
-                        <span class="file-size">DOCX • 2.4 MB</span>
-                      </div>
-                    </div>
-                    <q-img src="~assets/icon_download.svg" class="download-icon" fit="contain" />
-                  </div>
-                </div>
-              </div>
-            </div>
 
-            <!-- Карточка 2 -->
-            <div class="activity-card card-2">
-              <div class="card-header">
-                <q-img src="~assets/icon (1).svg" class="card-icon" fit="contain" />
-                <div class="card-title">Строительные классы</div>
-              </div>
-              <div class="card-text">
-                Специализированная программа подготовки будущих инженеров. Ученики изучают основы
-                робототехники, 3D-моделирования, программирования и работы с современным
-                оборудованием. Специализированная программа подготовки будущих инженеров.
-              </div>
-              <div class="card-files">
-                <div class="files-info">
-                  <div class="docs-link">
-                    <q-img src="~assets/SVG.svg" class="docs-icon" fit="contain" />
-                    <span>Документы</span>
-                  </div>
-                  <span class="files-count">2 файла</span>
-                </div>
-                <div class="files-list">
-                  <div class="file-item">
-                    <div class="file-info">
-                      <q-img src="~assets/icon-pdf.svg" class="file-icon" fit="contain" />
-                      <div class="file-details">
-                        <span class="file-name">Презентация «Инженерная вертикаль»</span>
-                        <span class="file-size">PDF • 2.4 MB</span>
-                      </div>
-                    </div>
-                    <q-img src="~assets/icon_download.svg" class="download-icon" fit="contain" />
-                  </div>
-                  <div class="file-item">
-                    <div class="file-info">
-                      <q-img src="~assets/icon-docx.svg" class="file-icon" fit="contain" />
-                      <div class="file-details">
-                        <span class="file-name">Информация о приеме в 7 класс</span>
-                        <span class="file-size">DOCX • 2.4 MB</span>
-                      </div>
-                    </div>
-                    <q-img src="~assets/icon_download.svg" class="download-icon" fit="contain" />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Карточка 3 -->
-            <div class="activity-card card-3">
-              <div class="card-header">
-                <q-img src="~assets/icon (2).svg" class="card-icon" fit="contain" />
-                <div class="card-title">Профильные классы</div>
-              </div>
-              <div class="card-text">
-                Специализированная программа подготовки будущих инженеров. Ученики изучают основы
-                робототехники, 3D-моделирования, программирования и работы с современным
-                оборудованием. Специализированная программа подготовки будущих инженеров.
-              </div>
-              <div class="card-files">
-                <div class="files-info">
-                  <div class="docs-link">
-                    <q-img src="~assets/SVG.svg" class="docs-icon" fit="contain" />
-                    <span>Документы</span>
-                  </div>
-                  <span class="files-count">4 файла</span>
-                </div>
-                <div class="files-list">
-                  <div class="file-item">
-                    <div class="file-info">
-                      <q-img src="~assets/icon-pdf.svg" class="file-icon" fit="contain" />
-                      <div class="file-details">
-                        <span class="file-name">Презентация «Инженерная вертикаль»</span>
-                        <span class="file-size">PDF • 2.4 MB</span>
-                      </div>
-                    </div>
-                    <q-img src="~assets/icon_download.svg" class="download-icon" fit="contain" />
-                  </div>
-                  <div class="file-item">
-                    <div class="file-info">
-                      <q-img src="~assets/icon-docx.svg" class="file-icon" fit="contain" />
-                      <div class="file-details">
-                        <span class="file-name">Информация о приеме в 7 класс</span>
-                        <span class="file-size">DOCX • 2.4 MB</span>
-                      </div>
-                    </div>
-                    <q-img src="~assets/icon_download.svg" class="download-icon" fit="contain" />
-                  </div>
-                  <div class="file-item">
-                    <div class="file-info">
-                      <q-img src="~assets/icon-pdf.svg" class="file-icon" fit="contain" />
-                      <div class="file-details">
-                        <span class="file-name">Презентация «Инженерная вертикаль»</span>
-                        <span class="file-size">PDF • 2.4 MB</span>
-                      </div>
-                    </div>
-                    <q-img src="~assets/icon_download.svg" class="download-icon" fit="contain" />
-                  </div>
-                  <div class="file-item">
-                    <div class="file-info">
-                      <q-img src="~assets/icon-docx.svg" class="file-icon" fit="contain" />
-                      <div class="file-details">
-                        <span class="file-name">Информация о приеме в 7 класс</span>
-                        <span class="file-size">DOCX • 2.4 MB</span>
-                      </div>
-                    </div>
-                    <q-img src="~assets/icon_download.svg" class="download-icon" fit="contain" />
+                  <!-- Кнопка "Показать больше / Скрыть" -->
+                  <div v-if="hasMoreFiles(card.documents)" class="show-more-files">
+                    <q-btn
+                      flat
+                      dense
+                      no-caps
+                      class="show-more-files-btn"
+                      @click="toggleShowAllFiles(card.id, 'study')"
+                    >
+                      <span class="btn-label">
+                        {{ showAllFilesMap[`${card.id}_study`] ? 'Скрыть' : 'Показать больше' }}
+                        <q-img
+                          :src="
+                            showAllFilesMap[`${card.id}_study`]
+                              ? 'src/assets/show-less.svg'
+                              : 'src/assets/show-more.svg'
+                          "
+                          class="btn-arrow-img"
+                          fit="contain"
+                        />
+                      </span>
+                    </q-btn>
                   </div>
                 </div>
               </div>
@@ -340,11 +316,187 @@
           </div>
         </div>
 
+        <!-- Внеурочная деятельность -->
         <div v-else-if="activeActivity === 'extracurricular'" class="activity-content">
-          Здесь будет контент для Внеурочной деятельности
+          <div class="cards-grid">
+            <div v-for="card in extracurricularCards" :key="card.id" class="activity-card card-2">
+              <div class="card-header">
+                <q-img :src="card.icon" class="card-icon" fit="contain" />
+                <div class="card-title">{{ card.title }}</div>
+              </div>
+              <div class="card-text" v-html="card.description"></div>
+              <div class="card-files">
+                <div class="files-info">
+                  <div class="docs-link">
+                    <q-img src="~assets/SVG.svg" class="docs-icon" fit="contain" />
+                    <span>Документы</span>
+                  </div>
+                  <span class="files-count"
+                    >{{ card.documents.length }} {{ declensionFiles(card.documents.length) }}</span
+                  >
+                </div>
+                <div class="files-list">
+                  <!-- Отображаем только первые 3 файла или все, если showAll -->
+                  <div
+                    v-for="doc in getVisibleFiles(card.documents, card.id, 'extracurricular')"
+                    :key="doc.id"
+                    class="file-item"
+                  >
+                    <div class="file-info">
+                      <q-img
+                        :src="
+                          doc.file_path.toLowerCase().endsWith('.pdf')
+                            ? 'src/assets/icon-pdf.svg'
+                            : 'src/assets/icon-docx.svg'
+                        "
+                        class="file-icon"
+                        fit="contain"
+                      />
+                      <div class="file-details">
+                        <span class="file-name" :title="doc.original_name">{{
+                          doc.original_name
+                        }}</span>
+                        <span class="file-size"
+                          >{{ getFileExtension(doc.file_path) }} •
+                          {{ formatFileSize(doc.file_size) }}</span
+                        >
+                      </div>
+                    </div>
+                    <a :href="doc.file_path" download target="_blank" class="download-link">
+                      <q-img
+                        src="src/assets/icon_download.svg"
+                        class="download-icon"
+                        fit="contain"
+                      />
+                    </a>
+                  </div>
+
+                  <!-- Кнопка "Показать больше / Скрыть" -->
+                  <div v-if="hasMoreFiles(card.documents)" class="show-more-files">
+                    <q-btn
+                      flat
+                      dense
+                      no-caps
+                      class="show-more-files-btn"
+                      @click="toggleShowAllFiles(card.id, 'extracurricular')"
+                    >
+                      <span class="btn-label">
+                        {{
+                          showAllFilesMap[`${card.id}_extracurricular`]
+                            ? 'Скрыть'
+                            : 'Показать больше'
+                        }}
+                        <q-img
+                          :src="
+                            showAllFilesMap[`${card.id}_extracurricular`]
+                              ? 'src/assets/show-less.svg'
+                              : 'src/assets/show-more.svg'
+                          "
+                          class="btn-arrow-img"
+                          fit="contain"
+                        />
+                      </span>
+                    </q-btn>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Если карточек нет -->
+            <div v-if="extracurricularCards.length === 0" class="empty-state">
+              <div class="text-center q-pa-xl">
+                <div class="text-h6 text-grey-7">Нет данных для внеурочной деятельности</div>
+              </div>
+            </div>
+          </div>
         </div>
+
+        <!-- Дополнительная деятельность -->
         <div v-else-if="activeActivity === 'additional'" class="activity-content">
-          Здесь будет контент для Дополнительной деятельности
+          <div class="cards-grid">
+            <div v-for="card in additionalCards" :key="card.id" class="activity-card card-3">
+              <div class="card-header">
+                <q-img :src="card.icon" class="card-icon" fit="contain" />
+                <div class="card-title">{{ card.title }}</div>
+              </div>
+              <div class="card-text" v-html="card.description"></div>
+              <div class="card-files">
+                <div class="files-info">
+                  <div class="docs-link">
+                    <q-img src="~assets/SVG.svg" class="docs-icon" fit="contain" />
+                    <span>Документы</span>
+                  </div>
+                  <span class="files-count"
+                    >{{ card.documents.length }} {{ declensionFiles(card.documents.length) }}</span
+                  >
+                </div>
+                <div class="files-list">
+                  <div
+                    v-for="doc in getVisibleFiles(card.documents, card.id, 'additional')"
+                    :key="doc.id"
+                    class="file-item"
+                  >
+                    <div class="file-info">
+                      <q-img
+                        :src="
+                          doc.file_path.toLowerCase().endsWith('.pdf')
+                            ? 'src/assets/icon-pdf.svg'
+                            : 'src/assets/icon-docx.svg'
+                        "
+                        class="file-icon"
+                        fit="contain"
+                      />
+                      <div class="file-details">
+                        <span class="file-name" :title="doc.original_name">{{
+                          doc.original_name
+                        }}</span>
+                        <span class="file-size"
+                          >{{ getFileExtension(doc.file_path) }} •
+                          {{ formatFileSize(doc.file_size) }}</span
+                        >
+                      </div>
+                    </div>
+                    <a :href="doc.file_path" download target="_blank" class="download-link">
+                      <q-img
+                        src="src/assets/icon_download.svg"
+                        class="download-icon"
+                        fit="contain"
+                      />
+                    </a>
+                  </div>
+
+                  <div v-if="hasMoreFiles(card.documents)" class="show-more-files">
+                    <q-btn
+                      flat
+                      dense
+                      no-caps
+                      class="show-more-files-btn"
+                      @click="toggleShowAllFiles(card.id, 'additional')"
+                    >
+                      <span class="btn-label">
+                        {{
+                          showAllFilesMap[`${card.id}_additional`] ? 'Скрыть' : 'Показать больше'
+                        }}
+                        <q-img
+                          :src="
+                            showAllFilesMap[`${card.id}_additional`]
+                              ? 'src/assets/show-less.svg'
+                              : 'src/assets/show-more.svg'
+                          "
+                          class="btn-arrow-img"
+                          fit="contain"
+                        />
+                      </span>
+                    </q-btn>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div v-if="additionalCards.length === 0" class="empty-state">
+              <div class="text-center q-pa-xl">
+                <div class="text-h6 text-grey-7">Нет данных для дополнительной деятельности</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -395,12 +547,12 @@
     </div>
 
     <!-- Модальное окно для видео -->
-    <q-dialog v-model="videoDialogVisible" persistent>
-      <div class="video-modal-close" @click="closeVideoDialog">
-        <q-icon name="close" size="24px" />
-      </div>
-      <div class="video-modal">
-        <div class="video-container">
+    <q-dialog v-model="videoDialogVisible" persistent class="video-dialog">
+      <div class="video-modal-wrapper">
+        <div class="video-modal-close" @click="closeVideoDialog">
+          <q-icon name="close" size="24px" />
+        </div>
+        <div class="video-modal">
           <div class="video-container" v-html="currentEmbedCode"></div>
         </div>
       </div>
@@ -409,81 +561,421 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useQuasar } from 'quasar';
+// import axios from 'axios';
 
 const $q = useQuasar();
 
 const activeActivity = ref('study');
 const loadingMore = ref(false);
 const videoDialogVisible = ref(false);
+const loadingPodcasts = ref(false); // Для индикации загрузки
 
-// Данные подкастов
-const allPodcasts = ref([
-  {
-    title: 'Как выбрать профессию?',
-    author: 'Елена Смирнова',
-    embedCode:
-      '<iframe src="https://vkvideo.ru/video_ext.php?oid=-45606327&id=456239452&hash=f21209b03c1d90e9&hd=4" width="1920" height="1080" allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock;" frameborder="0" allowfullscreen></iframe>',
-    image: '~assets/video.svg',
-  },
-  {
-    title: 'IT-сфера: мифы и реальность',
-    author: 'Алексей Иванов',
-    embedCode:
-      '<iframe src="https://vkvideo.ru/video_ext.php?oid=-45606327&id=456239452&hash=f21209b03c1d90e9&hd=4" width="1920" height="1080" allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock;" frameborder="0" allowfullscreen></iframe>',
-    image: '~assets/video.svg',
-  },
-  {
-    title: 'Профессия будущего',
-    author: 'Мария Петрова',
-    embedCode:
-      '<iframe src="https://vkvideo.ru/video_ext.php?oid=-45606327&id=456239452&hash=f21209b03c1d90e9&hd=4" width="1920" height="1080" allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock;" frameborder="0" allowfullscreen></iframe>',
-    image: '~assets/video.svg',
-  },
-  {
-    title: 'Как стать инженером?',
-    author: 'Дмитрий Сидоров',
-    embedCode:
-      '<iframe src="https://vkvideo.ru/video_ext.php?oid=-45606327&id=456239452&hash=f21209b03c1d90e9&hd=4" width="1920" height="1080" allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock;" frameborder="0" allowfullscreen></iframe>',
-    image: '~assets/video.svg',
-  },
-  {
-    title: 'Творческие профессии',
-    author: 'Анна Козлова',
-    embedCode:
-      '<iframe src="https://vkvideo.ru/video_ext.php?oid=-45606327&id=456239452&hash=f21209b03c1d90e9&hd=4" width="1920" height="1080" allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock;" frameborder="0" allowfullscreen></iframe>',
-    image: '~assets/video.svg',
-  },
-  {
-    title: 'Медицина сегодня',
-    author: 'Татьяна Морозова',
-    embedCode:
-      '<iframe src="https://vkvideo.ru/video_ext.php?oid=-45606327&id=456239452&hash=f21209b03c1d90e9&hd=4" width="1920" height="1080" allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock;" frameborder="0" allowfullscreen></iframe>',
-    image: '~assets/video.svg',
-  },
-  {
-    title: 'Бизнес и стартапы',
-    author: 'Павел Новиков',
-    embedCode:
-      '<iframe src="https://vkvideo.ru/video_ext.php?oid=-45606327&id=456239452&hash=f21209b03c1d90e9&hd=4" width="1920" height="1080" allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock;" frameborder="0" allowfullscreen></iframe>',
-    image: '~assets/video.svg',
-  },
-  {
-    title: 'Педагогика нового времени',
-    author: 'Ольга Соколова',
-    embedCode:
-      '<iframe src="https://vkvideo.ru/video_ext.php?oid=-45606327&id=456239452&hash=f21209b03c1d90e9&hd=4" width="1920" height="1080" allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock;" frameborder="0" allowfullscreen></iframe>',
-    image: '~assets/video.svg',
-  },
-  {
-    title: 'Экология и устойчивое развитие',
-    author: 'Игорь Васильев',
-    embedCode:
-      '<iframe src="https://vkvideo.ru/video_ext.php?oid=-45606327&id=456239452&hash=f21209b03c1d90e9&hd=4" width="1920" height="1080" allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock;" frameborder="0" allowfullscreen></iframe>',
-    image: '~assets/video.svg',
-  },
-]);
+// Интерфейс для документа
+interface Document {
+  id: number;
+  original_name: string;
+  file_path: string;
+  file_size: number;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+}
+
+// Интерфейс для активности
+interface Activity {
+  id: number;
+  type: 'study' | 'extracurricular' | 'additional';
+  slug: string;
+  title: string;
+  description: string;
+  assignment_text: string;
+  sort_order: number;
+  documents: Document[];
+}
+
+// Интерфейс для карточки (адаптированный под ваш текущий UI)
+interface ActivityCard {
+  id: number;
+  title: string;
+  description: string;
+  documents: Document[];
+  icon: string; // иконка для карточки
+}
+
+// Данные активностей из API
+const allActivities = ref<Activity[]>([]);
+
+// Загрузка для активностей
+const loadingActivities = ref(false);
+
+// Активные карточки для текущего типа деятельности
+const studyCards = ref<ActivityCard[]>([]);
+const extracurricularCards = ref<ActivityCard[]>([]);
+const additionalCards = ref<ActivityCard[]>([]);
+
+// Данные подкастов из API
+interface Podcast {
+  id: number;
+  title: string;
+  videoUrl: string;
+  image: string;
+  sort_order: number;
+  createdAt: string;
+}
+// Функция для получения активностей с API
+const fetchActivities = async () => {
+  loadingActivities.value = true;
+
+  try {
+    // Реальный запрос к API
+    // const response = await axios.get('http://127.0.0.1:8000/api/activities');
+    // allActivities.value = response.data;
+
+    // ---------- ЗАГЛУШКА (имитация ответа от сервера) ----------
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    const mockActivities: Activity[] = [
+      // Учебная деятельность (study)
+      {
+        id: 1,
+        type: 'study',
+        slug: 'engineering-classes',
+        title: 'Инженерные классы',
+        description:
+          'Специализированная программа подготовки будущих инженеров. Ученики изучают основы робототехники, 3D-моделирования, программирования и работы с современным оборудованием.',
+        assignment_text: 'Практические задания по инженерным классам...',
+        sort_order: 1,
+        documents: [
+          {
+            id: 1,
+            original_name: 'Презентация «Инженерная вертикаль»',
+            file_path: 'http://127.0.0.1:8000/storage/documents/presentation.pdf',
+            file_size: 2457600,
+            sort_order: 1,
+            created_at: '2026-05-15T10:58:08.000000Z',
+            updated_at: '2026-05-15T10:58:08.000000Z',
+          },
+          {
+            id: 2,
+            original_name: 'Информация о приеме в 7 класс',
+            file_path: 'http://127.0.0.1:8000/storage/documents/admission.docx',
+            file_size: 2516582,
+            sort_order: 2,
+            created_at: '2026-05-15T10:58:08.000000Z',
+            updated_at: '2026-05-15T10:58:08.000000Z',
+          },
+          {
+            id: 3,
+            original_name: 'Презентация «Инженерная вертикаль 1»',
+            file_path: 'http://127.0.0.1:8000/storage/documents/presentation.pdf',
+            file_size: 2457600,
+            sort_order: 3,
+            created_at: '2026-05-15T10:58:08.000000Z',
+            updated_at: '2026-05-15T10:58:08.000000Z',
+          },
+          {
+            id: 4,
+            original_name: 'Информация о приеме в 7 класс 1',
+            file_path: 'http://127.0.0.1:8000/storage/documents/admission.docx',
+            file_size: 2516582,
+            sort_order: 4,
+            created_at: '2026-05-15T10:58:08.000000Z',
+            updated_at: '2026-05-15T10:58:08.000000Z',
+          },
+        ],
+      },
+      {
+        id: 2,
+        type: 'study',
+        slug: 'construction-classes',
+        title: 'Строительные классы',
+        description: 'Специализированная программа подготовки будущих строителей и архитекторов.',
+        assignment_text: 'Практические задания по строительным классам...',
+        sort_order: 2,
+        documents: [
+          {
+            id: 3,
+            original_name: 'Презентация строительных классов',
+            file_path: 'http://127.0.0.1:8000/storage/documents/construction.pdf',
+            file_size: 1856000,
+            sort_order: 1,
+            created_at: '2026-05-15T10:58:08.000000Z',
+            updated_at: '2026-05-15T10:58:08.000000Z',
+          },
+        ],
+      },
+      {
+        id: 3,
+        type: 'study',
+        slug: 'profile-classes',
+        title: 'Профильные классы',
+        description: 'Углубленное изучение предметов по выбранному профилю.',
+        assignment_text: 'Практические задания по профильным классам...',
+        sort_order: 3,
+        documents: [
+          {
+            id: 4,
+            original_name: 'Профильное обучение - обзор',
+            file_path: 'http://127.0.0.1:8000/storage/documents/profile.pdf',
+            file_size: 3120000,
+            sort_order: 1,
+            created_at: '2026-05-15T10:58:08.000000Z',
+            updated_at: '2026-05-15T10:58:08.000000Z',
+          },
+          {
+            id: 5,
+            original_name: 'Расписание профильных курсов',
+            file_path: 'http://127.0.0.1:8000/storage/documents/schedule.docx',
+            file_size: 1560000,
+            sort_order: 2,
+            created_at: '2026-05-15T10:58:08.000000Z',
+            updated_at: '2026-05-15T10:58:08.000000Z',
+          },
+        ],
+      },
+
+      // Внеурочная деятельность (extracurricular)
+      {
+        id: 4,
+        type: 'extracurricular',
+        slug: 'robotics-club',
+        title: 'Робототехника',
+        description:
+          '<p>Кружок по робототехнике для учеников 5-9 классов. Учимся собирать и программировать роботов.</p>',
+        assignment_text: '<p>Практические задания по робототехнике</p>',
+        sort_order: 1,
+        documents: [
+          {
+            id: 6,
+            original_name: 'Программа кружка робототехники',
+            file_path: 'http://127.0.0.1:8000/storage/documents/robotics.docx',
+            file_size: 1024000,
+            sort_order: 1,
+            created_at: '2026-05-15T10:58:08.000000Z',
+            updated_at: '2026-05-15T10:58:08.000000Z',
+          },
+        ],
+      },
+      {
+        id: 4,
+        type: 'extracurricular',
+        slug: 'robotics-club',
+        title: 'Робототехника',
+        description:
+          '<p>Кружок по робототехнике для учеников 5-9 классов. Учимся собирать и программировать роботов.</p>',
+        assignment_text: '<p>Практические задания по робототехнике</p>',
+        sort_order: 1,
+        documents: [
+          {
+            id: 1,
+            original_name: 'Презентация «Инженерная вертикаль»',
+            file_path: 'http://127.0.0.1:8000/storage/documents/presentation.pdf',
+            file_size: 2457600,
+            sort_order: 1,
+            created_at: '2026-05-15T10:58:08.000000Z',
+            updated_at: '2026-05-15T10:58:08.000000Z',
+          },
+          {
+            id: 2,
+            original_name: 'Информация о приеме в 7 класс',
+            file_path: 'http://127.0.0.1:8000/storage/documents/admission.docx',
+            file_size: 2516582,
+            sort_order: 2,
+            created_at: '2026-05-15T10:58:08.000000Z',
+            updated_at: '2026-05-15T10:58:08.000000Z',
+          },
+          {
+            id: 3,
+            original_name: 'Презентация «Инженерная вертикаль 1»',
+            file_path: 'http://127.0.0.1:8000/storage/documents/presentation.pdf',
+            file_size: 2457600,
+            sort_order: 3,
+            created_at: '2026-05-15T10:58:08.000000Z',
+            updated_at: '2026-05-15T10:58:08.000000Z',
+          },
+          {
+            id: 4,
+            original_name: 'Информация о приеме в 7 класс 1',
+            file_path: 'http://127.0.0.1:8000/storage/documents/admission.docx',
+            file_size: 2516582,
+            sort_order: 4,
+            created_at: '2026-05-15T10:58:08.000000Z',
+            updated_at: '2026-05-15T10:58:08.000000Z',
+          },
+          {
+            id: 6,
+            original_name: 'Программа кружка робототехники',
+            file_path: 'http://127.0.0.1:8000/storage/documents/robotics.docx',
+            file_size: 1024000,
+            sort_order: 1,
+            created_at: '2026-05-15T10:58:08.000000Z',
+            updated_at: '2026-05-15T10:58:08.000000Z',
+          },
+        ],
+      },
+      // Дополнительная деятельность (additional)
+      {
+        id: 5,
+        type: 'additional',
+        slug: 'foreign-languages',
+        title: 'Иностранные языки',
+        description:
+          '<p>Дополнительные занятия по английскому, немецкому и французскому языкам.</p>',
+        assignment_text: '<p>Расписание дополнительных занятий</p>',
+        sort_order: 1,
+        documents: [
+          {
+            id: 1,
+            original_name: 'Презентация «Инженерная вертикаль»',
+            file_path: 'http://127.0.0.1:8000/storage/documents/presentation.pdf',
+            file_size: 2457600,
+            sort_order: 1,
+            created_at: '2026-05-15T10:58:08.000000Z',
+            updated_at: '2026-05-15T10:58:08.000000Z',
+          },
+          {
+            id: 2,
+            original_name: 'Информация о приеме в 7 класс',
+            file_path: 'http://127.0.0.1:8000/storage/documents/admission.docx',
+            file_size: 2516582,
+            sort_order: 2,
+            created_at: '2026-05-15T10:58:08.000000Z',
+            updated_at: '2026-05-15T10:58:08.000000Z',
+          },
+          {
+            id: 3,
+            original_name: 'Презентация «Инженерная вертикаль 1»',
+            file_path: 'http://127.0.0.1:8000/storage/documents/presentation.pdf',
+            file_size: 2457600,
+            sort_order: 3,
+            created_at: '2026-05-15T10:58:08.000000Z',
+            updated_at: '2026-05-15T10:58:08.000000Z',
+          },
+          {
+            id: 4,
+            original_name: 'Информация о приеме в 7 класс 1',
+            file_path: 'http://127.0.0.1:8000/storage/documents/admission.docx',
+            file_size: 2516582,
+            sort_order: 4,
+            created_at: '2026-05-15T10:58:08.000000Z',
+            updated_at: '2026-05-15T10:58:08.000000Z',
+          },
+          {
+            id: 7,
+            original_name: 'Расписание занятий',
+            file_path: 'http://127.0.0.1:8000/storage/documents/schedule.pdf',
+            file_size: 512000,
+            sort_order: 1,
+            created_at: '2026-05-15T10:58:08.000000Z',
+            updated_at: '2026-05-15T10:58:08.000000Z',
+          },
+        ],
+      },
+    ];
+
+    allActivities.value = mockActivities;
+
+    // Распределяем активности по типам и преобразуем в формат карточек
+    const activitiesByType = {
+      study: allActivities.value.filter((a) => a.type === 'study'),
+      extracurricular: allActivities.value.filter((a) => a.type === 'extracurricular'),
+      additional: allActivities.value.filter((a) => a.type === 'additional'),
+    };
+
+    // Преобразуем в карточки для отображения
+    // Иконки для разных типов карточек (можно заменить на свои)
+    const icons = ['src/assets/icon.svg', 'src/assets/icon (1).svg', 'src/assets/icon (2).svg'];
+
+    studyCards.value = activitiesByType.study.map((item, index) => ({
+      id: item.id,
+      title: item.title,
+      description: item.description,
+      documents: item.documents,
+      icon: icons[index % icons.length] || 'src/assets/icon.svg',
+    }));
+
+    extracurricularCards.value = activitiesByType.extracurricular.map((item, index) => ({
+      id: item.id,
+      title: item.title,
+      description: item.description,
+      documents: item.documents,
+      icon: icons[index % icons.length] || 'src/assets/icon.svg',
+    }));
+
+    additionalCards.value = activitiesByType.additional.map((item, index) => ({
+      id: item.id,
+      title: item.title,
+      description: item.description,
+      documents: item.documents,
+      icon: icons[index % icons.length] || 'src/assets/icon.svg',
+    }));
+
+    console.log('Активности загружены:', allActivities.value);
+  } catch (error) {
+    console.error('Ошибка при загрузке активностей:', error);
+    $q.notify({
+      message: 'Не удалось загрузить виды деятельности',
+      color: 'negative',
+      position: 'top',
+      icon: 'error',
+    });
+  } finally {
+    loadingActivities.value = false;
+  }
+};
+// Форматирование размера файла
+const formatFileSize = (bytes: number): string => {
+  if (bytes === 0) return '0 Bytes';
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+};
+
+// Получение расширения файла
+const getFileExtension = (filePath: string): string => {
+  const extension = filePath.split('.').pop()?.toUpperCase() || '';
+  return extension;
+};
+
+// Склонение слова "файл"
+const declensionFiles = (count: number): string => {
+  if (count % 10 === 1 && count % 100 !== 11) return 'файл';
+  if (count % 10 >= 2 && count % 10 <= 4 && (count % 100 < 10 || count % 100 >= 20)) return 'файла';
+  return 'файлов';
+};
+
+// Для каждого типа деятельности свой лимит отображаемых файлов
+const visibleFilesLimit = ref(3);
+
+// Объект для отслеживания состояния показа файлов для каждой карточки
+// Ключ: `${cardId}_${activityType}`, значение: boolean (показаны ли все файлы)
+const showAllFilesMap = ref<Record<string, boolean>>({});
+
+// Функция для переключения показа всех файлов
+const toggleShowAllFiles = (cardId: number, activityType: string) => {
+  const key = `${cardId}_${activityType}`;
+  showAllFilesMap.value[key] = !showAllFilesMap.value[key];
+};
+
+// Функция для получения видимых файлов
+const getVisibleFiles = (documents: Document[], cardId: number, activityType: string) => {
+  const key = `${cardId}_${activityType}`;
+  const showAll = showAllFilesMap.value[key] || false;
+
+  if (showAll) {
+    return documents;
+  }
+  return documents.slice(0, visibleFilesLimit.value);
+};
+
+// Функция для проверки, нужно ли показывать кнопку "Показать больше"
+const hasMoreFiles = (documents: Document[]) => {
+  return documents.length > visibleFilesLimit.value;
+};
+const allPodcasts = ref<Podcast[]>([]);
 
 // Количество подкастов для отображения (начальные 6 = 2 ряда по 3)
 const visibleCount = ref(6);
@@ -502,7 +994,6 @@ const hasMorePodcasts = computed(() => {
 const loadMorePodcasts = () => {
   loadingMore.value = true;
 
-  // Имитация загрузки (можно убрать или оставить для эффекта)
   setTimeout(() => {
     visibleCount.value = allPodcasts.value.length;
     loadingMore.value = false;
@@ -516,30 +1007,186 @@ const loadMorePodcasts = () => {
   }, 500);
 };
 
-const onLearnMore = () => {
-  $q.notify({
-    message: 'Здесь будет дополнительная информация',
-    color: 'primary',
-    position: 'top',
-    icon: 'info',
-  });
+// Функция для получения подкастов с API (с заглушкой)
+const fetchPodcasts = async () => {
+  loadingPodcasts.value = true;
+
+  // Показываем индикатор загрузки
+  // $q.loading.show({
+  //   message: 'Загрузка подкастов...',
+  //   boxClass: 'bg-primary text-white',
+  // });
+
+  try {
+    // Реальный запрос к API
+    // const response = await axios.get('http://127.0.0.1:8000/api/podcasts');
+    // allPodcasts.value = response.data.data;
+
+    // ---------- ЗАГЛУШКА (имитация ответа от сервера) ----------
+    // Удалите этот блок, когда будет готов реальный API
+    await new Promise((resolve) => setTimeout(resolve, 1000)); // Имитация задержки
+
+    // Ваши тестовые данные из задачи
+    const mockData = {
+      data: [
+        {
+          id: 1,
+          title: 'Как выбрать профессию?',
+          vk_url: 'https://vkvideo.ru/video-211232966_456241335',
+          cover_image:
+            'http://127.0.0.1:8000/storage/podcasts/YHxbXaLDMjcKPfV4PwMZTuN3nRAKZYYTrvzmCEIb.png',
+          sort_order: 2,
+          created_at: '15.05.2026',
+        },
+        {
+          id: 2,
+          title: 'IT-сфера: мифы и реальность',
+          vk_url: 'https://vkvideo.ru/video-211232966_456241335',
+          cover_image:
+            'http://127.0.0.1:8000/storage/podcasts/mkR6K5jvq3nRiIEk3o4TdYxIZlYsQ4peJyYOUEnY.png',
+          sort_order: 5,
+          created_at: '15.05.2026',
+        },
+        {
+          id: 3,
+          title: 'Профессия будущего',
+          vk_url: 'https://vkvideo.ru/video-211232966_456241335',
+          cover_image:
+            'http://127.0.0.1:8000/storage/podcasts/YHxbXaLDMjcKPfV4PwMZTuN3nRAKZYYTrvzmCEIb.png',
+          sort_order: 1,
+          created_at: '14.05.2026',
+        },
+        {
+          id: 4,
+          title: 'Как стать инженером?',
+          vk_url: 'https://vkvideo.ru/video-211232966_456241335',
+          cover_image:
+            'http://127.0.0.1:8000/storage/podcasts/mkR6K5jvq3nRiIEk3o4TdYxIZlYsQ4peJyYOUEnY.png',
+          sort_order: 3,
+          created_at: '13.05.2026',
+        },
+        {
+          id: 5,
+          title: 'Творческие профессии',
+          vk_url: 'https://vkvideo.ru/video-211232966_456241335',
+          cover_image:
+            'http://127.0.0.1:8000/storage/podcasts/YHxbXaLDMjcKPfV4PwMZTuN3nRAKZYYTrvzmCEIb.png',
+          sort_order: 4,
+          created_at: '12.05.2026',
+        },
+        {
+          id: 6,
+          title: 'Медицина сегодня',
+          vk_url: 'https://vkvideo.ru/video-211232966_456241335',
+          cover_image:
+            'http://127.0.0.1:8000/storage/podcasts/mkR6K5jvq3nRiIEk3o4TdYxIZlYsQ4peJyYOUEnY.png',
+          sort_order: 6,
+          created_at: '11.05.2026',
+        },
+        {
+          id: 7,
+          title: 'Бизнес и стартапы',
+          vk_url: 'https://vkvideo.ru/video-211232966_456241335',
+          cover_image:
+            'http://127.0.0.1:8000/storage/podcasts/YHxbXaLDMjcKPfV4PwMZTuN3nRAKZYYTrvzmCEIb.png',
+          sort_order: 7,
+          created_at: '10.05.2026',
+        },
+        {
+          id: 8,
+          title: 'Педагогика нового времени',
+          vk_url: 'https://vkvideo.ru/video-211232966_456241335',
+          cover_image:
+            'http://127.0.0.1:8000/storage/podcasts/mkR6K5jvq3nRiIEk3o4TdYxIZlYsQ4peJyYOUEnY.png',
+          sort_order: 8,
+          created_at: '09.05.2026',
+        },
+        {
+          id: 9,
+          title: 'Экология и устойчивое развитие',
+          vk_url: 'https://vkvideo.ru/video-211232966_456241335',
+          cover_image:
+            'http://127.0.0.1:8000/storage/podcasts/YHxbXaLDMjcKPfV4PwMZTuN3nRAKZYYTrvzmCEIb.png',
+          sort_order: 9,
+          created_at: '08.05.2026',
+        },
+      ],
+    };
+
+    // Сортируем по sort_order
+    const sortedData = [...mockData.data].sort((a, b) => a.sort_order - b.sort_order);
+
+    // Преобразуем в нужный формат
+    allPodcasts.value = sortedData.map((item) => ({
+      id: item.id,
+      title: item.title,
+      videoUrl: item.vk_url,
+      image: item.cover_image,
+      sort_order: item.sort_order,
+      createdAt: item.created_at,
+    }));
+
+    // ---------- КОНЕЦ ЗАГЛУШКИ ----------
+  } catch (error) {
+    console.error('Ошибка при загрузке подкастов:', error);
+    $q.notify({
+      message: 'Не удалось загрузить подкасты',
+      color: 'negative',
+      position: 'top',
+      icon: 'error',
+    });
+  } finally {
+    loadingPodcasts.value = false;
+    $q.loading.hide();
+  }
 };
 
-const currentEmbedCode = ref(''); // Вместо currentVideoUrl
+// Функция для преобразования ссылки VK Video в embed-код
+const getEmbedCodeFromUrl = (url: string): string => {
+  const match = url.match(/video-?(\d+)_(\d+)/);
+  if (match) {
+    const ownerId = match[1];
+    const videoId = match[2];
+    const finalOwnerId = url.includes('video-') ? `-${ownerId}` : ownerId;
+    return `<iframe
+      src="https://vkvideo.ru/video_ext.php?oid=${finalOwnerId}&id=${videoId}&hd=1&autoplay=1"
+      width="100%"
+      height="100%"
+      allow="autoplay; encrypted-media; fullscreen; picture-in-picture; screen-wake-lock"
+      frameborder="0"
+      allowfullscreen
+    ></iframe>`;
+  }
+  console.warn('Не удалось распознать ссылку на видео:', url);
+  return '';
+};
 
-const playPodcast = (podcast: any) => {
-  if (podcast.embedCode) {
-    currentEmbedCode.value = podcast.embedCode;
+const currentEmbedCode = ref('');
+
+const playPodcast = (podcast: Podcast) => {
+  if (podcast.videoUrl) {
+    currentEmbedCode.value = getEmbedCodeFromUrl(podcast.videoUrl);
     videoDialogVisible.value = true;
   } else {
-    // Уведомление об ошибке
+    $q.notify({
+      message: 'Ссылка на видео отсутствует',
+      color: 'warning',
+      position: 'top',
+      timeout: 2000,
+    });
   }
 };
 
 const closeVideoDialog = () => {
   videoDialogVisible.value = false;
-  currentEmbedCode.value = ''; // Очищаем, чтобы остановить видео
+  currentEmbedCode.value = '';
 };
+
+// Загружаем подкасты при монтировании компонента
+onMounted(() => {
+  void fetchPodcasts();
+  void fetchActivities();
+});
 </script>
 
 <style scoped lang="scss">
@@ -587,7 +1234,7 @@ const closeVideoDialog = () => {
 
 .hero-topic-wrapper {
   text-align: center;
-  margin-top: 40px;
+  margin: 40px 40px;
 }
 
 .hero-topic {
@@ -744,6 +1391,11 @@ const closeVideoDialog = () => {
   }
 }
 
+.advantages-second-col {
+  // display: block !important;
+  flex-direction: column !important;
+}
+
 .advantage-row {
   display: flex;
   align-items: center;
@@ -775,6 +1427,10 @@ const closeVideoDialog = () => {
   margin: 0;
 }
 
+.advantage-tab {
+  display: none;
+}
+
 // Секция "Виды деятельности"
 .activities-section {
   padding: 80px 24px;
@@ -794,7 +1450,7 @@ const closeVideoDialog = () => {
 .activities-slider {
   display: flex;
   justify-content: center;
-  margin-bottom: 60px;
+  margin: 0px auto 60px;
 }
 
 .activities-oval {
@@ -855,11 +1511,6 @@ const closeVideoDialog = () => {
   border-radius: 40px;
   padding: 24px;
   transition: transform 0.3s ease;
-
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.1);
-  }
 }
 .card-1 {
   box-shadow:
@@ -986,8 +1637,6 @@ const closeVideoDialog = () => {
 .file-icon {
   width: 40px;
   height: 40px;
-  flex-shrink: 0;
-  padding: 12px;
 }
 
 .file-name {
@@ -997,6 +1646,11 @@ const closeVideoDialog = () => {
   color: #131314;
   text-decoration: none;
   transition: color 0.2s ease;
+  max-width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
 }
 
 .file-size {
@@ -1011,6 +1665,35 @@ const closeVideoDialog = () => {
   height: 16px;
   flex-shrink: 0;
   cursor: pointer;
+}
+.show-more-files {
+  margin-top: 12px;
+  text-align: center;
+}
+
+.show-more-files-btn {
+  font-family: 'Mulish', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #505468;
+  padding: 0;
+  min-height: auto;
+
+  &:hover {
+    background: transparent;
+    color: #505468;
+  }
+}
+body.desktop .q-focusable:focus > .q-focus-helper,
+body.desktop .q-manual-focusable--focused > .q-focus-helper,
+body.desktop .q-hoverable:hover > .q-focus-helper {
+  background: none;
+}
+
+.btn-arrow-img {
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
 }
 
 // Секция "Подкасты"
@@ -1163,6 +1846,13 @@ const closeVideoDialog = () => {
 }
 
 // Модальное окно для видео
+.video-dialog {
+  :deep(.q-dialog__backdrop) {
+    background: #06091f0d !important;
+    backdrop-filter: blur(20px) !important;
+  }
+}
+
 .video-modal {
   position: relative;
   width: 90vw;
@@ -1185,6 +1875,11 @@ const closeVideoDialog = () => {
   }
 }
 
+.video-modal-wrapper {
+  max-width: 90vw !important;
+  max-height: 90vh !important;
+}
+
 .video-modal-close {
   position: absolute;
   top: 40px;
@@ -1197,7 +1892,7 @@ const closeVideoDialog = () => {
   cursor: pointer;
   z-index: 10;
   transition: all 0.3s ease;
-  color: black;
+  color: #6f552e;
 
   &:hover {
     background: rgba(0, 0, 0, 0.7);
@@ -1215,7 +1910,7 @@ const closeVideoDialog = () => {
   :deep(iframe) {
     width: 100%;
     height: 100%;
-    border-radius: 40px;
+    // border-radius: 40px;
     border: none;
   }
 }
@@ -1230,12 +1925,11 @@ const closeVideoDialog = () => {
 // Адаптив для мобильных
 @media (max-width: 768px) {
   .video-modal {
-    width: 95vw;
-    border-radius: 30px;
+    border-radius: 28px;
   }
 
   .video-iframe {
-    border-radius: 20px;
+    border-radius: 28px;
   }
 
   .video-modal-close {
@@ -1252,6 +1946,9 @@ const closeVideoDialog = () => {
 
 // Адаптив для планшетов
 @media (max-width: 1024px) {
+  .file-name {
+    max-width: 500px;
+  }
   .podcasts-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
@@ -1264,13 +1961,16 @@ const closeVideoDialog = () => {
 
 // Адаптив для мобильных
 @media (max-width: 768px) {
+  .row.q-col-gutter-lg[data-v-2373a833] {
+    gap: 10px;
+  }
   .podcasts-section {
     padding: 60px 40px 60px;
     border-radius: 60px;
   }
 
   .podcasts-grid {
-    // grid-template-columns: 1fr;
+    grid-template-columns: repeat(1, 1fr);
     gap: 20px;
   }
 
@@ -1296,6 +1996,12 @@ const closeVideoDialog = () => {
 }
 
 @media (max-width: 480px) {
+  .file-name {
+    max-width: 200px;
+  }
+  .podcasts-section {
+    padding: 40px 20px 40px;
+  }
   .podcasts-title {
     font-size: 36px;
   }
@@ -1309,48 +2015,21 @@ const closeVideoDialog = () => {
 // Адаптив для планшетов
 @media (max-width: 1024px) {
   .cards-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-  }
-}
-
-// Адаптив для мобильных
-@media (max-width: 768px) {
-  .cards-grid {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 40px;
   }
-
-  .activity-card {
-    padding: 20px;
-  }
-
-  .card-title {
-    font-size: 18px;
-  }
-}
-// Адаптив для планшетов
-@media (max-width: 768px) {
-  .activities-section {
-    padding: 60px 24px;
-  }
-
-  .activities-title {
-    font-size: 40px;
-    margin-bottom: 40px;
-  }
-
-  // Изменяем овал на горизонтальный скролл
   .activities-slider {
+    display: block;
     width: 100%;
     overflow-x: auto;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch; // Плавный скролл на iOS
-    scrollbar-width: thin; // Тонкий скроллбар для Firefox
+    margin: 0px auto 20px;
+    // scrollbar-width: thin; // Тонкий скроллбар для Firefox
 
     // Скрываем скроллбар для Chrome/Safari (опционально)
     &::-webkit-scrollbar {
-      height: 4px;
+      height: 0px;
     }
 
     &::-webkit-scrollbar-track {
@@ -1364,28 +2043,56 @@ const closeVideoDialog = () => {
     }
   }
 
-  .activities-oval {
-    display: flex;
-    flex-direction: row; // Оставляем горизонтальное расположение
-    align-items: center;
-    background: #fff9f6;
-    border-radius: 100px;
-    padding: 4px;
-    width: max-content; // Ширина по содержимому
-    min-width: 100%; // Минимальная ширина на всю ширину контейнера
-    gap: 8px;
-  }
+  // Адаптив для мобильных
+  @media (max-width: 768px) {
+    .cards-grid {
+      grid-template-columns: 1fr;
+    }
 
-  .activity-switch {
-    width: auto; // Убираем width: 100%
-    justify-content: center;
-    white-space: nowrap; // Запрещаем перенос текста
-    flex-shrink: 0; // Запрещаем сжатие элементов
-  }
+    .activity-card {
+      padding: 20px;
+    }
 
-  .activity-text {
-    font-size: 16px;
-    white-space: nowrap; // Текст в одну строку
+    .card-title {
+      font-size: 18px;
+    }
+  }
+  // Адаптив для планшетов
+  @media (max-width: 768px) {
+    .activities-section {
+      padding: 20px 24px;
+    }
+
+    .activities-title {
+      font-size: 40px;
+      margin-bottom: 40px;
+    }
+
+    // Изменяем овал на горизонтальный скролл
+
+    .activities-oval {
+      display: flex;
+      flex-direction: row; // Оставляем горизонтальное расположение
+      align-items: center;
+      background: #fff9f6;
+      border-radius: 100px;
+      padding: 4px;
+      width: max-content; // Ширина по содержимому
+      //min-width: 100%; // Минимальная ширина на всю ширину контейнера
+      gap: 8px;
+    }
+
+    .activity-switch {
+      width: auto; // Убираем width: 100%
+      justify-content: center;
+      white-space: nowrap; // Запрещаем перенос текста
+      flex-shrink: 0; // Запрещаем сжатие элементов
+    }
+
+    .activity-text {
+      font-size: 16px;
+      white-space: nowrap; // Текст в одну строку
+    }
   }
 }
 
@@ -1404,10 +2111,38 @@ const closeVideoDialog = () => {
     height: 24px;
   }
 }
+
+@media (max-width: 1024px) {
+  #row-block {
+    display: none;
+  }
+  .advantages-second-col {
+    display: none;
+  }
+  .advantage-tab {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+  }
+  .advantage-tab-col-1 {
+    width: 58%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .advantage-tab-col-2 {
+    width: 40%;
+  }
+  .advantage-row {
+    margin-top: 0px;
+    margin-bottom: 20px;
+  }
+}
 // Адаптив для планшетов
 @media (max-width: 768px) {
   .advantages-section {
-    padding: 40px 0;
+    padding: 20px 0;
   }
 
   // Перестраиваем строку преимуществ
@@ -1419,12 +2154,12 @@ const closeVideoDialog = () => {
 
   // Первая колонка (с текстом и иконками)
   .col-12.col-md-6:first-child {
-    order: 1; // Первая колонка сверху
+    //order: 1; // Первая колонка сверху
   }
 
   // Вторая колонка (с двумя картинками)
   .col-12.col-md-6:last-child {
-    order: 2; // Вторая колонка снизу
+    //order: 2; // Вторая колонка снизу
     display: flex;
     flex-direction: row;
     gap: 20px;
@@ -1442,16 +2177,6 @@ const closeVideoDialog = () => {
     }
   }
 
-  .advantage-row {
-    flex-direction: column;
-    text-align: center;
-    gap: 20px;
-  }
-
-  .advantage-icon {
-    width: 60px;
-  }
-
   .advantage-description {
     font-size: 22px;
     line-height: 28px;
@@ -1459,20 +2184,26 @@ const closeVideoDialog = () => {
 
   .advantage-row {
     gap: 16px;
+    text-align: left;
   }
 }
 
 // Адаптив для мобильных
 @media (max-width: 480px) {
   .advantage-row {
-    flex-direction: column;
     text-align: center;
     gap: 20px;
+    margin-bottom: 0px;
   }
 
   .advantage-icon-left,
   .advantage-icon-right {
-    width: 50px;
+    width: 24px;
+    height: 80px;
+  }
+  .advantage-icon {
+    width: 24px;
+    height: 80px;
   }
 }
 // Адаптив для планшетов
@@ -1485,6 +2216,9 @@ const closeVideoDialog = () => {
   .advantage-image {
     margin-bottom: 24px;
   }
+  .col-12.col-md-6:last-child .row.q-col-gutter-md {
+    flex-direction: column !important; // меняем с row на column
+  }
 }
 
 // Адаптив для мобильных
@@ -1495,16 +2229,23 @@ const closeVideoDialog = () => {
   }
 
   .advantage-image {
-    text-align: center;
+    display: none;
   }
 
   .advantage-card {
     text-align: center;
-    margin-bottom: 40px;
   }
 
   .advantage-description {
     max-width: 100%;
+    text-align: left;
+    font-size: 16px;
+    line-height: 20px;
+  }
+
+  .advantage-image-small {
+    width: 350px;
+    height: auto;
   }
 }
 
@@ -1533,10 +2274,19 @@ const closeVideoDialog = () => {
 
   .space-description {
     font-size: 16px;
+    line-height: 20px;
   }
 
   .space-image {
     min-width: 250px;
+  }
+  .space-content {
+    display: block;
+  }
+  .space-title[data-v-2373a833] {
+    padding-top: 20px;
+    font-size: 32px;
+    line-height: 35px;
   }
 }
 
@@ -1584,12 +2334,39 @@ const closeVideoDialog = () => {
     min-height: 500px;
   }
 
+  .hero-topic-wrapper {
+    margin: 40px 20px;
+  }
+
   .hero-topic {
     font-size: 28px;
   }
 
   .hero-text {
     font-size: 16px;
+  }
+  .advantage-tab {
+    display: none;
+  }
+  #row-block {
+    display: flex;
+  }
+  .advantages-second-col {
+    display: block;
+  }
+  .row > .col-6,
+  .row > .col-xs-6 {
+    height: auto;
+    width: 100%;
+  }
+  .row.q-col-gutter-lg[data-v-2373a833] {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .q-col-gutter-y-md > *,
+  .q-col-gutter-md > * {
+    padding-top: 20px;
   }
 }
 </style>

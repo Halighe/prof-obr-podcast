@@ -38,7 +38,7 @@
     </q-header>
 
     <!-- Основной контент -->
-    <q-page-container>
+    <q-page-container style="padding-top: 20px !important">
       <router-view />
     </q-page-container>
 
@@ -103,11 +103,38 @@
     </div>
 
     <!-- Кнопка наверх -->
-    <q-page-sticky position="bottom-right" :offset="[60, 60]">
-      <q-btn round style="z-index: 9999" @click="scrollToTop">
+    <!-- <q-page-sticky position="bottom-right" :offset="[60, 60]">
+      <q-btn round style="z-index: 99990000" @click="scrollToTop">
         <q-img src="~assets/Button_icon.svg" class="btn-icon" fit="contain" />
       </q-btn>
-    </q-page-sticky>
+    </q-page-sticky> -->
+    <!-- Кнопка наверх -->
+    <div
+      class="scroll-top-button"
+      @click="scrollToTop"
+      style="
+        position: fixed;
+        bottom: 60px;
+        right: 60px;
+        width: 56px;
+        height: 56px;
+        background: #fbe1ba;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 999999;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      "
+    >
+      <q-img
+        src="~assets/Button_icon.svg"
+        class="btn-icon"
+        fit="contain"
+        style="width: 50px; height: 50px"
+      />
+    </div>
 
     <!-- Футер -->
     <div class="footer-section" :class="{ 'podcasts-footer': $route.path === '/podcasts' }">
@@ -169,6 +196,12 @@
               </a>
             </div>
           </div>
+          <div class="footer-col">
+            <div class="footer-logo-text-mobile">
+              © 2026 Муниципальное автономное общеобразовательное учреждение «Средняя
+              общеобразовательная школа «Мастерград» города Перми
+            </div>
+          </div>
         </div>
 
         <!-- Нижняя строка с копирайтом -->
@@ -214,14 +247,14 @@ const scrollToMobile = (sectionId: string) => {
     }
   } else {
     // Если на другой странице — переходим на главную с якорем
-    router.push(`/#${sectionId}`);
+    void router.push(`/#${sectionId}`);
   }
 };
 
 // Открытие внешней ссылки
-const openExternalLink = (url: string) => {
-  window.open(url, '_blank', 'noopener,noreferrer');
-};
+// const openExternalLink = (url: string) => {
+//   window.open(url, '_blank', 'noopener,noreferrer');
+// };
 
 const scrollToTop = () => {
   window.scrollTo({
@@ -512,6 +545,9 @@ watch(
   line-height: 40px;
   max-width: 350px;
 }
+.footer-logo-text-mobile {
+  display: none;
+}
 
 .footer-links {
   display: flex;
@@ -634,6 +670,11 @@ watch(
     width: auto;
   }
 
+  .scroll-top-button {
+    bottom: 20px !important;
+    right: 20px !important;
+  }
+
   .footer-section {
     padding: 40px 40px 25px;
   }
@@ -694,6 +735,53 @@ watch(
     font-family: 'Mulish', sans-serif;
     font-weight: 600;
     color: #131314;
+  }
+}
+
+@media (max-width: 480px) {
+  .scroll-top-button {
+    bottom: 12px !important;
+    right: 12px !important;
+  }
+  .podcasts-footer[data-v-22686b16] {
+    border-radius: 40px 40px 0px 0px;
+  }
+  .footer-section[data-v-22686b16] {
+    padding: 40px 20px 25px;
+  }
+  .footer-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+  .footer-logo[data-v-22686b16] {
+    padding-bottom: 0px;
+  }
+  .footer-logo-text {
+    display: none;
+  }
+  .footer-logo-text-mobile {
+    display: block;
+    font-family: 'Mulish', sans-serif;
+    font-weight: 400;
+    color: #4b5563;
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  // Колонка 1: Логотип (первая)
+  .footer-col:nth-child(1) {
+    order: 0;
+  }
+
+  // Колонка 4: Контакты (вторая)
+  .footer-col:nth-child(5) {
+    order: 2;
+  }
+
+  // Блок с копирайтом (третий)
+  .footer-partners {
+    order: 3;
   }
 }
 </style>
